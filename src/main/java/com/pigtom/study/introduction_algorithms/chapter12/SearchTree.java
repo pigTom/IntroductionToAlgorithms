@@ -69,8 +69,8 @@ public class SearchTree {
             return;
 
         System.out.println(head.key);
-        inorderVisitNoRecurse(head.left);
-        inorderVisitNoRecurse(head.right);
+        preorderVisitRecurse(head.left);
+        preorderVisitRecurse(head.right);
     }
 
     /**
@@ -158,26 +158,32 @@ public class SearchTree {
             }
             // parent.left == null
             // goto step 2
-            while (parent.right == null) {
+
+            while (true) {
+                // step 2
+                if (parent.right != null) {
+                    parent = parent.right;
+                    break;// goto step 1
+                }
+
                 // parent.right == null
                 // goto step 3
-                Node<Integer> grandPa = parent.parent;
-                if (grandPa == null) {
-                    return;
-                }
-                if (parent == grandPa.right) {
+                while (true) {
+                    Node<Integer> grandPa = parent.parent;
+                    if (grandPa == null) {
+                        return;
+                    }
+                    if (parent == grandPa.right) {
+                        parent = grandPa;
+                        continue;
+                    }
+                    // parent == grandPa.left
+                    // goto step 2
                     parent = grandPa;
-                    continue;
+                    break;
                 }
-                // parent == grandPa.left
-                parent = grandPa;
-                break;
-            }
 
-            // parent.right != null
-            // g
-            parent = parent.right;
-            // goto step 1
+            }
         }
     }
 
