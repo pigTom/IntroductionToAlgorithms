@@ -2,6 +2,8 @@ package com.pigtom.study.introduction_algorithms.chapter12;
 
 import org.junit.jupiter.api.Test;
 
+import static com.pigtom.study.introduction_algorithms.chapter12.Node.insertNode;
+
 /**
  * 搜索树（SearchTree):
  * 每个结点就是一个对象。一个结点有父结点对象，左孩子，右孩子。如果某个孩子不存在，则相应的属性为NIL。
@@ -9,13 +11,7 @@ import org.junit.jupiter.api.Test;
  * 遍历分为三种情况：前序遍历，中序遍历，后序遍历。是以根被访问的顺序来命名的，前序遍历则为先访问根再访问
  * 左结点，最后访问右结点。中序遍历是左根右，后序遍历则是左右根。
  */
-public class SearchTree {
-    class Node<T> {
-        Node<T> parent;
-        Node<T> left;
-        Node<T> right;
-        T key;
-    }
+public class SearchTree12_1 {
 
     /**
      * 建立搜索树：左子树的结点关键字全部不大于父结点，右子树的结点关键字不小于父结点关键字
@@ -184,51 +180,6 @@ public class SearchTree {
                 }
 
             }
-        }
-    }
-
-    /**
-     * 插入一个结点，保证原搜索树的特点：左子树的结点关键字全部不大于父结点，右子树的结点关键字不小于父结点关键字
-     *
-     * @param head
-     * @param node
-     */
-    void insertNode(Node<Integer> head, Node<Integer> node) {
-        Node<Integer> parent = new Node<>();
-        // 将当头结点设为父结点的左结点
-        // 让node直接与parent的左结点比较（默认情况下：node.key > parent.key)
-        parent.left = head;
-
-        while (true) {
-            while (parent.left != null && node.key <= parent.left.key) {
-                parent = parent.left;
-            }
-
-            if (parent.left == null) {
-                parent.left = node;
-                node.parent = parent;
-                return;
-            }
-
-            // 如果父结点的左结点小于要插入的结点的关键字
-            // 则让父结点的左结点变成父结点，并尝试将node插入其右子树中
-            parent = parent.left;
-            // node.key > root.left.key and node.key < root.key
-            while (parent.right != null && node.key >= parent.right.key) {
-                parent = parent.right;
-            }
-
-            // 如果右结点为空
-            // 则尝试将要插入的结点放入父结点的右结点中
-            if (parent.right == null) {
-                parent.right = node;
-                node.parent = parent;
-                return;
-            }
-
-            // 父结点的右结点不为空 且 node.key < parent.right.key
-            // 父结点的右结点变成父结点，尝试将node插入新的父结点的左子树中
-            parent = parent.right;
         }
     }
 }
