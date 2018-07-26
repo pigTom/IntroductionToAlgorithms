@@ -68,4 +68,32 @@ public class Node<T> {
             parent = parent.right;
         }
     }
+
+
+    /**
+     * 用更简洁的方式插入一个元素
+     *
+     * @param head
+     * @param node
+     */
+    public static void insert(Node<Integer> head, Node<Integer> node) {
+        Node<Integer> p = null;
+        Node<Integer> n = head;
+        while (n != null) {
+            p = head;
+            if (node.key < n.key) {
+                n = n.left;
+            } else
+                n = n.right;
+        }
+
+        node.parent = p;
+        if (p == null) { // Tree is empty
+            head = node;
+        } else if (p.key < node.key) {
+            p.right = node;
+        } else {
+            p.left = node;
+        }
+    }
 }
