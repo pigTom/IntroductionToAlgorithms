@@ -15,7 +15,7 @@ public class SearchTree12_2 {
      * @param head
      * @return
      */
-    Node<Integer> treeMinimumRecurse(Node<Integer> head) {
+    static Node<Integer> treeMinimumRecurse(Node<Integer> head) {
         if (head == null || head.left == null) {
             return head;
         }
@@ -34,7 +34,7 @@ public class SearchTree12_2 {
      * @param head
      * @return
      */
-    Node<Integer> treeMaximumRecurse(Node<Integer> head) {
+    static Node<Integer> treeMaximumRecurse(Node<Integer> head) {
         if (head == null || head.right == null) {
             return head;
         }
@@ -65,7 +65,7 @@ public class SearchTree12_2 {
      * 2、取出父节点的父节点，记作祖父节点。如果祖父为空返回空，父节点为祖父节点的右节点，返回祖父节点。
      * 如果父节点为祖父节点的左节点，说明该节点为最小节点，没有前驱，返回空
      */
-    public Node<Integer> treePredecessor(Node<Integer> head) {
+    public static Node<Integer> treePredecessor(Node<Integer> head) {
         // 给定的结点为空
         if (head == null) {
             return null;
@@ -76,7 +76,10 @@ public class SearchTree12_2 {
         }
         // 将父节点的父节点赋值给祖父节点
         Node<Integer> grandPa = head.parent;
-
+        while (grandPa != null && grandPa.left == head) {
+            head = grandPa;
+            grandPa = grandPa.parent;
+        }
         // 祖父节点为空或者祖节点的右节点为父节点，则返回祖节点
         if (grandPa == null || grandPa.right == head) {
             return grandPa;
@@ -85,6 +88,34 @@ public class SearchTree12_2 {
         return null;
     }
 
+    /**
+     * 找到一个结点的后继，即大于这个结点的最小结点。
+     *
+     * @param head
+     * @return
+     */
+    public static Node<Integer> treeDecessor(Node<Integer> head) {
+        if (head == null) {
+            return null;
+        }
+        // 如果右子树不为空，找到右子树中最小的结点
+        if (head.right != null) {
+            return treeMinimumRecurse(head.right);
+        }
+
+        // 右子树为空,从head结点的祖先结点中找到后继
+        Node<Integer> grandPa = head.parent;
+        // 只有当祖先是祖先爸的左节点时，祖先爸爸才是head的后继
+        while (grandPa != null && grandPa.right == head) {
+            head = grandPa;
+            grandPa = grandPa.parent;
+        }
+        if (grandPa == null || grandPa.left == head) {
+            return grandPa;
+        }
+
+        return null;
+    }
     // 12.2=5
     /**
      * 12.2-5 证明：如果一棵二叉搜索树中的一个结点有两个孩子，那么它的后继没有左孩子，它的前驱没有右孩子。

@@ -18,7 +18,7 @@ public class SearchTree12_1 {
      *
      * @return 返回根结点
      */
-    Node<Integer> buildSearchTree(int size) {
+    static Node<Integer> buildSearchTree(int size) {
         Node<Integer> head = new Node<>();
         head.key = 4;
         for (int i = 0; i < size; i++) {
@@ -51,7 +51,7 @@ public class SearchTree12_1 {
      *
      * @param head 树的根结点
      */
-    void inorderVisitRecurse(Node<Integer> head) {
+    static void inorderVisitRecurse(Node<Integer> head) {
         if (head == null) {
             return;
         }
@@ -60,7 +60,7 @@ public class SearchTree12_1 {
         inorderVisitRecurse(head.right);
     }
 
-    void preorderVisitRecurse(Node<Integer> head) {
+    static void preorderVisitRecurse(Node<Integer> head) {
         if (head == null)
             return;
 
@@ -82,7 +82,7 @@ public class SearchTree12_1 {
      *
      * @param head 树的根结点
      */
-    void inorderVisitNoRecurse(Node<Integer> head) {
+    static void inorderVisitNoRecurse(Node<Integer> head) {
         Node<Integer> parent = head;
         while (parent != null) {
             // step 1

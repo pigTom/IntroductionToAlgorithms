@@ -14,7 +14,7 @@ public class Node<T> {
      */
     public static Node<Integer> buildSearchTree(int size) {
         Node<Integer> head = new Node<>();
-        head.key = 4;
+        head.key = (int) (Math.random() * size);
         for (int i = 0; i < size; i++) {
             Node<Integer> node = new Node<>();
             node.key = (int) (Math.random() * size);
