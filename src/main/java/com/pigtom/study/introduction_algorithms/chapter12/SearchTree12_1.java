@@ -18,32 +18,31 @@ public class SearchTree12_1 {
      *
      * @return 返回根结点
      */
-    static Node<Integer> buildSearchTree(int size) {
-        Node<Integer> head = new Node<>();
-        head.key = 4;
+    static Tree<Integer> buildSearchTree(int size) {
+        Tree<Integer> tree = new Tree<>();
         for (int i = 0; i < size; i++) {
             Node<Integer> node = new Node<>();
-            node.key = (int) (Math.random() * size);
-            insertNode(head, node);
+            node.setKey((int) (Math.random() * size));
+            Node.insert(tree, node);
         }
-        return head;
+        return tree;
     }
 
     @Test
     public void testInorderVisit() {
-        Node<Integer> head = buildSearchTree(100);
+        Tree<Integer> tree = buildSearchTree(100);
         System.out.println("___________________________");
-        inorderVisitRecurse(head);
+        inorderVisitRecurse(tree.getRoot());
         System.out.println("_____________***************___________");
-        inorderVisitNoRecurse(head);
+        inorderVisitNoRecurse(tree.getRoot());
     }
 
     @Test
     public void testPreorderVisit() {
-        Node<Integer> head = buildSearchTree(20);
-        preorderVisitRecurse(head);
+        Tree<Integer> tree = buildSearchTree(20);
+        preorderVisitRecurse(tree.getRoot());
         System.out.println("___________________________");
-        preorderVisitNoRecurse(head);
+        preorderVisitNoRecurse(tree.getRoot());
     }
 
     /**
@@ -55,18 +54,18 @@ public class SearchTree12_1 {
         if (head == null) {
             return;
         }
-        inorderVisitRecurse(head.left);
-        System.out.println(head.key);
-        inorderVisitRecurse(head.right);
+        inorderVisitRecurse(head.getLeft());
+        System.out.println(head.getKey());
+        inorderVisitRecurse(head.getRight());
     }
 
     static void preorderVisitRecurse(Node<Integer> head) {
         if (head == null)
             return;
 
-        System.out.println(head.key);
-        preorderVisitRecurse(head.left);
-        preorderVisitRecurse(head.right);
+        System.out.println(head.getKey());
+        preorderVisitRecurse(head.getLeft());
+        preorderVisitRecurse(head.getRight());
     }
 
     /**
@@ -87,27 +86,27 @@ public class SearchTree12_1 {
         while (parent != null) {
             // step 1
             // 直到左树为null
-            while (parent.left != null) {
-                parent = parent.left;
+            while (parent.getLeft() != null) {
+                parent = parent.getLeft();
             }
 
             // 输出当前节点（叶节点或只有右节点的有根节点）
-            System.out.println(parent.key);
+            System.out.println(parent.getKey());
 
             // step 2
             // judge the right node of parent
             // if the right node of parent is null then go to step3
-            while (parent.right == null) {
+            while (parent.getRight() == null) {
                 // parent.right == null
                 // go back to root
                 // get the grandPa
-                Node<Integer> grandPa = parent.parent;
+                Node<Integer> grandPa = parent.getParent();
 
                 // 如果祖父不是空 并且父结点 为祖父结点的右结点，
                 // 则一直往上走
-                while (grandPa != null && parent == grandPa.right) {
+                while (grandPa != null && parent == grandPa.getRight()) {
                     parent = grandPa;
-                    grandPa = parent.parent;
+                    grandPa = parent.getParent();
                 }
                 // if grandPa == null then parent must be root of all tree
                 // and root.right == null
@@ -118,7 +117,7 @@ public class SearchTree12_1 {
                 // grandPa not null
                 // if parent is the left son of grandPa
                 // then print it
-                System.out.println(grandPa.key);
+                System.out.println(grandPa.getKey());
                 parent = grandPa;
                 // parent is the right son of grandPa
                 // now go back to root
@@ -126,7 +125,7 @@ public class SearchTree12_1 {
 
             // parent.right not null
             // go to step 1
-            parent = parent.right;
+            parent = parent.getRight();
 
         }
     }
@@ -147,9 +146,9 @@ public class SearchTree12_1 {
         Node<Integer> parent = head;
         while (parent != null) {
             // step 1
-            System.out.println(parent.key);
-            if (parent.left != null) {
-                parent = parent.left;
+            System.out.println(parent.getKey());
+            if (parent.getLeft() != null) {
+                parent = parent.getLeft();
                 continue;
             }
             // parent.left == null
@@ -157,19 +156,19 @@ public class SearchTree12_1 {
 
             while (true) {
                 // step 2
-                if (parent.right != null) {
-                    parent = parent.right;
+                if (parent.getRight() != null) {
+                    parent = parent.getRight();
                     break;// goto step 1
                 }
 
                 // parent.right == null
                 // goto step 3
                 while (true) {
-                    Node<Integer> grandPa = parent.parent;
+                    Node<Integer> grandPa = parent.getParent();
                     if (grandPa == null) {
                         return;
                     }
-                    if (parent == grandPa.right) {
+                    if (parent == grandPa.getRight()) {
                         parent = grandPa;
                         continue;
                     }

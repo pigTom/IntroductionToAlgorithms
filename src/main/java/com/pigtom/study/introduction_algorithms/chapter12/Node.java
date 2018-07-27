@@ -1,40 +1,78 @@
 package com.pigtom.study.introduction_algorithms.chapter12;
 
 public class Node<T> {
-    Node<T> parent;
-    Node<T> left;
-    Node<T> right;
-    T key;
+    private Node<T> parent;
+    private Node<T> left;
+    private Node<T> right;
+    private T key;
 
+    public Node<T> getParent() {
+        return parent;
+    }
+
+    public void setParent(Node<T> parent) {
+        this.parent = parent;
+    }
+
+    public Node<T> getLeft() {
+        return left;
+    }
+
+    public void setLeft(Node<T> left) {
+        this.left = left;
+    }
+
+    public Node<T> getRight() {
+        return right;
+    }
+
+    public void setRight(Node<T> right) {
+        this.right = right;
+    }
+
+    public T getKey() {
+        return key;
+    }
+
+    public void setKey(T key) {
+        this.key = key;
+    }
 
     /**
      * 建立搜索树：左子树的结点关键字全部不大于父结点，右子树的结点关键字不小于父结点关键字
      *
      * @return 返回根结点
      */
-    public static Node<Integer> buildSearchTree(int size) {
-        Node<Integer> head = new Node<>();
-        head.key = (int) (Math.random() * size);
+    public static Tree<Integer> buildSearchTree(int size) {
+        Tree<Integer> tree = new Tree<>();
         for (int i = 0; i < size; i++) {
             Node<Integer> node = new Node<>();
             node.key = (int) (Math.random() * size);
-            insertNode(head, node);
+            insert(tree, node);
         }
-        return head;
+        return tree;
     }
 
-
+    public static Tree<Integer> buildSearchTree(int begin, int end) {
+        Tree<Integer> tree = new Tree<>();
+        for (int i = begin; i <end; i ++) {
+            Node<Integer> node = new Node<>();
+            node.key = (int) (Math.random() * (end - begin) + begin);
+            insert(tree, node);
+        }
+        return tree;
+    }
     /**
      * 插入一个结点，保证原搜索树的特点：左子树的结点关键字全部不大于父结点，右子树的结点关键字不小于父结点关键字
      *
-     * @param head
+     * @param tree
      * @param node
      */
-    public static void insertNode(Node<Integer> head, Node<Integer> node) {
+    public static void insertNode(Tree<Integer> tree, Node<Integer> node) {
         Node<Integer> parent = new Node<>();
         // 将当头结点设为父结点的左结点
         // 让node直接与parent的左结点比较（默认情况下：node.key > parent.key)
-        parent.left = head;
+        parent.left = tree.getRoot();
 
         while (true) {
             while (parent.left != null && node.key <= parent.left.key) {
@@ -73,14 +111,14 @@ public class Node<T> {
     /**
      * 用更简洁的方式插入一个元素
      *
-     * @param head
+     * @param tree
      * @param node
      */
-    public static void insert(Node<Integer> head, Node<Integer> node) {
+    public static void insert(Tree<Integer> tree, Node<Integer> node) {
         Node<Integer> p = null;
-        Node<Integer> n = head;
+        Node<Integer> n = tree.getRoot();
         while (n != null) {
-            p = head;
+            p = n;
             if (node.key < n.key) {
                 n = n.left;
             } else
@@ -89,11 +127,11 @@ public class Node<T> {
 
         node.parent = p;
         if (p == null) { // Tree is empty
-            head = node;
-        } else if (p.key < node.key) {
-            p.right = node;
-        } else {
+            tree.setRoot(node);
+        } else if (node.key < p.key) {
             p.left = node;
+        } else {
+            p.right = node;
         }
     }
 }

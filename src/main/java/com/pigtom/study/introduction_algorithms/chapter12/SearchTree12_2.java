@@ -16,10 +16,10 @@ public class SearchTree12_2 {
      * @return
      */
     static Node<Integer> treeMinimumRecurse(Node<Integer> head) {
-        if (head == null || head.left == null) {
+        if (head == null || head.getLeft() == null) {
             return head;
         }
-        head = head.left;
+        head = head.getLeft();
         return treeMinimumRecurse(head);
     }
 
@@ -35,10 +35,10 @@ public class SearchTree12_2 {
      * @return
      */
     static Node<Integer> treeMaximumRecurse(Node<Integer> head) {
-        if (head == null || head.right == null) {
+        if (head == null || head.getRight() == null) {
             return head;
         }
-        head = head.right;
+        head = head.getRight();
         return treeMaximumRecurse(head);
     }
 
@@ -71,17 +71,17 @@ public class SearchTree12_2 {
             return null;
         }
         // 左子树不为空，找到左子树中最大的结点
-        if (head.left != null) {
-            return treeMaximumRecurse(head.left);
+        if (head.getLeft() != null) {
+            return treeMaximumRecurse(head.getLeft());
         }
         // 将父节点的父节点赋值给祖父节点
-        Node<Integer> grandPa = head.parent;
-        while (grandPa != null && grandPa.left == head) {
+        Node<Integer> grandPa = head.getParent();
+        while (grandPa != null && grandPa.getLeft() == head) {
             head = grandPa;
-            grandPa = grandPa.parent;
+            grandPa = grandPa.getParent();
         }
         // 祖父节点为空或者祖节点的右节点为父节点，则返回祖节点
-        if (grandPa == null || grandPa.right == head) {
+        if (grandPa == null || grandPa.getRight() == head) {
             return grandPa;
         }
         // 父节点为祖父节点的左节点，父节点为最小的节点，没有前驱，返回空
@@ -99,18 +99,18 @@ public class SearchTree12_2 {
             return null;
         }
         // 如果右子树不为空，找到右子树中最小的结点
-        if (head.right != null) {
-            return treeMinimumRecurse(head.right);
+        if (head.getRight() != null) {
+            return treeMinimumRecurse(head.getRight());
         }
 
         // 右子树为空,从head结点的祖先结点中找到后继
-        Node<Integer> grandPa = head.parent;
+        Node<Integer> grandPa = head.getParent();
         // 只有当祖先是祖先爸的左节点时，祖先爸爸才是head的后继
-        while (grandPa != null && grandPa.right == head) {
+        while (grandPa != null && grandPa.getRight() == head) {
             head = grandPa;
-            grandPa = grandPa.parent;
+            grandPa = grandPa.getParent();
         }
-        if (grandPa == null || grandPa.left == head) {
+        if (grandPa == null || grandPa.getLeft() == head) {
             return grandPa;
         }
 
@@ -178,11 +178,10 @@ public class SearchTree12_2 {
      */
     @Test
     public void testPredecessor() {
-        Node<Integer> head = Node.buildSearchTree(50);
-        SearchTree12_1 searchTree12_1 = new SearchTree12_1();
-        searchTree12_1.inorderVisitNoRecurse(head);
+        Tree<Integer> tree = Node.buildSearchTree(50);
+        SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
         System.out.println("******************");
-        System.out.println("head.key = " + head.key);
-        System.out.println(treePredecessor(head).key);
+        System.out.println("head.key = " + tree.getRoot().getKey());
+        System.out.println(treePredecessor(tree.getRoot()).getKey());
     }
 }
