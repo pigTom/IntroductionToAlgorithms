@@ -87,7 +87,7 @@ public class SearchTree12_3 {
      * @param key
      * @param tree
      */
-    public static void deleteNode(int key, Tree<Integer> tree)throws Exception{
+    public void deleteNode(int key, Tree<Integer> tree) throws Exception {
         // find node
         Node<Integer> node = search(key, tree);
         if (node == null) return;
@@ -97,15 +97,13 @@ public class SearchTree12_3 {
             exchangeNode(tree, node, node.getLeft());
         } else {
             Node<Integer> succeed = SearchTree12_2.treeMinimumRecurse(node.getRight());
-            if (succeed.getParent() == node) {
-                //TODO wrong place
-                succeed.setLeft(node.getLeft());
-            } else {
-                succeed.getParent().setLeft(succeed.getRight());
-
-                succeed.setLeft(node.getLeft());
+            if (succeed.getParent() != node) {
+                transplant(tree, succeed, succeed.getRight());
                 succeed.setRight(node.getRight());
+                succeed.getRight().setParent(succeed);
             }
+            succeed.setLeft(node.getLeft());
+            succeed.getLeft().setParent(succeed);
             exchangeNode(tree, node, succeed);
         }
 
@@ -133,38 +131,25 @@ public class SearchTree12_3 {
      * 将树tree的根设为y
      * @param tree
      * @param x 不能为空
-     * @param y
+     * @param l
      * @throws NullPointerException
      */
-    public static void exchangeNode(final Tree<Integer> tree, Node<Integer> x, Node<Integer> y) throws Exception {
-        // x can`t be null and x will be replace by y
-        // y can`t be null
-        if (x == null) {
-            return;
+    public static void exchangeNode(Tree<Integer> tree, Node<Integer> x, Node<Integer> l) throws Exception {
+        if (x.getParent() == null) {
+            tree.setRoot(l);
+        } else if (x.getParent().getLeft() == x) {
+            x.getParent().setLeft(l);
+        } else x.getParent().setRight(l);
+        if (l != null) {
+            l.setParent(x.getParent());
         }
-        Node<Integer> p = x.getParent();
-        if (y != null) {
-            if (y == p) {
-                throw new Exception("wrong");
-            }
-            y.setParent(p);
-        }
-
-        if (p != null) {
-            if (p != x.getParent()) {
-                System.out.println("Error");
-            }
-            if (p.getLeft() == x) {
-                p.setLeft(y);
-            } else p.setRight(y);
-        } else tree.setRoot(y);
     }
 
 
     @Test
     public void testRemove() throws Exception {
-        for (int i = 0; i < 10; i++) {
-            int size = 3;
+        for (int i = 0; i < 20; i++) {
+            int size = 10;
             Tree<Integer> tree = Node.buildSearchTree(size);
             SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
             int num = (int) (Math.random() * size);
@@ -172,6 +157,43 @@ public class SearchTree12_3 {
             deleteNode(num, tree);
             SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
             System.out.println("\r");
+        }
+    }
+
+
+    public void transplant(Tree<Integer> tree, Node<Integer> u, Node<Integer> v) {
+        if (u.getParent() == null) {
+            tree.setRoot(v);
+        } else if (u == u.getParent().getLeft()) {
+            u.getParent().setLeft(v);
+        } else u.getParent().setRight(v);
+        if (v != null) {
+            v.setParent(u.getParent());
+        }
+    }
+
+    public void delete(int key, Tree<Integer> tree) {
+        Node<Integer> node = search(key, tree);
+        if (node != null) {
+            delete(tree, node);
+        }
+    }
+
+    public void delete(Tree<Integer> tree, Node<Integer> z) {
+        if (z.getLeft() == null) {
+            transplant(tree, z, z.getRight());
+        } else if (z.getRight() == null) {
+            transplant(tree, z, z.getLeft());
+        } else {
+            Node<Integer> y = SearchTree12_2.treeMinimumRecurse(z.getRight());
+            if (y.getParent() != z) {
+                transplant(tree, y, y.getRight());
+                y.setRight(z.getRight());
+                y.getRight().setParent(y);
+            }
+            transplant(tree, z, y);
+            y.setLeft(z.getLeft());
+            y.getLeft().setParent(y);
         }
     }
 
