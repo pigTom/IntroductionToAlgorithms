@@ -179,7 +179,7 @@ public class SearchTree12_2 {
     @Test
     public void testPredecessor() {
         Tree<Integer> tree = Node.buildSearchTree(50);
-        SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
+        SearchTree12_1.inorderVisitNoRecurse(tree);
         System.out.println("******************");
         System.out.println("head.key = " + tree.getRoot().getKey());
         System.out.println(treePredecessor(tree.getRoot()).getKey());

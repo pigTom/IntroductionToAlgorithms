@@ -34,7 +34,7 @@ public class SearchTree12_1 {
         System.out.println("___________________________");
         inorderVisitRecurse(tree.getRoot());
         System.out.println("_____________***************___________");
-        inorderVisitNoRecurse(tree.getRoot());
+        inorderVisitNoRecurse(tree);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class SearchTree12_1 {
      *
      * @param head 树的根结点
      */
-    static void inorderVisitRecurse(Node<Integer> head) {
+    public static void inorderVisitRecurse(Node<Integer> head) {
         if (head == null) {
             return;
         }
@@ -59,7 +59,7 @@ public class SearchTree12_1 {
         inorderVisitRecurse(head.getRight());
     }
 
-    static void preorderVisitRecurse(Node<Integer> head) {
+    public static void preorderVisitRecurse(Node<Integer> head) {
         if (head == null)
             return;
 
@@ -81,8 +81,8 @@ public class SearchTree12_1 {
      *
      * @param head 树的根结点
      */
-    static void inorderVisitNoRecurse(Node<Integer> head) {
-        Node<Integer> parent = head;
+    public static void inorderVisitNoRecurse(Tree<Integer> head) {
+        Node<Integer> parent = head.getRoot();
         while (parent != null) {
             // step 1
             // 直到左树为null
@@ -142,7 +142,7 @@ public class SearchTree12_1 {
      *
      * @param head
      */
-    void preorderVisitNoRecurse(Node<Integer> head) {
+    public void preorderVisitNoRecurse(Node<Integer> head) {
         Node<Integer> parent = head;
         while (parent != null) {
             // step 1

@@ -70,7 +70,7 @@ public class SearchTree12_3 {
     @Test
     public void testSearch() {
         Tree<Integer> tree = Node.buildSearchTree(20);
-        SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
+        SearchTree12_1.inorderVisitNoRecurse(tree);
         Node<Integer> note = search(3, tree);
         Node<Integer> note2 = search(4, tree);
         if (note != null) {
@@ -144,11 +144,11 @@ public class SearchTree12_3 {
         for (int i = 0; i < 20; i++) {
             int size = 10;
             Tree<Integer> tree = Node.buildSearchTree(size);
-            SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
+            SearchTree12_1.inorderVisitNoRecurse(tree);
             int num = (int) (Math.random() * size);
             System.out.println("*******" + num + "*******");
             deleteNode(num, tree);
-            SearchTree12_1.inorderVisitNoRecurse(tree.getRoot());
+            SearchTree12_1.inorderVisitNoRecurse(tree);
             System.out.println("\r");
         }
     }
@@ -233,7 +233,7 @@ public class SearchTree12_3 {
             treeInsert(node, n);
         }
 
-        SearchTree12_1.inorderVisitNoRecurse(node);
+        SearchTree12_1.inorderVisitNoRecurse(tree);
     }
 
     /***

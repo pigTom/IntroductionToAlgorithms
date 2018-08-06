@@ -4,6 +4,7 @@ public class Node<T> {
     private Node<T> parent;
     private Node<T> left;
     private Node<T> right;
+    private ColorEnum color;
     private T key;
 
     public Node<T> getParent() {
@@ -36,6 +37,14 @@ public class Node<T> {
 
     public void setKey(T key) {
         this.key = key;
+    }
+
+    public ColorEnum getColor() {
+        return color;
+    }
+
+    public void setColor(ColorEnum color) {
+        this.color = color;
     }
 
     /**
