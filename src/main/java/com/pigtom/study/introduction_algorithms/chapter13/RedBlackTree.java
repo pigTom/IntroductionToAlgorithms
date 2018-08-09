@@ -97,8 +97,23 @@ public class RedBlackTree {
         node.setColor(ColorEnum.RED);
     }
 
-//    public void colorFix(Tree tree, Node<Integer> z) {
-//        if (tree)
-//    }
+    /** 当前结点是红色
+     *  1，如果当前结点的父结点是红色，并且如果当前结点的叔叔结点也是红色，
+     *      则将当前结点的父结点和叔叔颜色都变成黑色。祖父结点的颜色变成黑色。
+     *  2、如果当前结点的叔叔结点是黑色，
+     *
+     * @param tree
+     * @param z
+     */
+    public void colorFix(Tree tree, Node<Integer> z) {
+        // 父结点是红色的
+        while (z.getParent() != null && z.getParent().getColor().equals(ColorEnum.RED)) {
+            // 因为父结点是红色的，所以祖父一定不为空
+            Node<Integer> grandPa = z.getParent().getParent();
+            if (grandPa.getLeft() != null ) {
+
+            }
+        }
+    }
 
 }
