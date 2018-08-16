@@ -2,8 +2,6 @@ package com.pigtom.study.introduction_algorithms.chapter12;
 
 import org.junit.jupiter.api.Test;
 
-import static com.pigtom.study.introduction_algorithms.chapter12.Node.insertNode;
-
 /**
  * 搜索树（SearchTree):
  * 每个结点就是一个对象。一个结点有父结点对象，左孩子，右孩子。如果某个孩子不存在，则相应的属性为NIL。

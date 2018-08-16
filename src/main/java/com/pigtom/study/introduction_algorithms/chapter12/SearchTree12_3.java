@@ -303,7 +303,7 @@ public class SearchTree12_3 {
         AT tr = searchTree12_3.buidlANode();
         System.out.println("**************start***********");
         travel(tr);
-        System.out.println("******** ******over******* ****");
+        System.out.println("**************over***********");
 
     }
 
