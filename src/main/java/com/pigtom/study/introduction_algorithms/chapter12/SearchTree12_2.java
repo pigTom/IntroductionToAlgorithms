@@ -12,8 +12,8 @@ public class SearchTree12_2 {
      * 则将左节点变成父节点,进入步骤1，如果head为空则返回空（这种情况只有在空树的时候发生）
      * 或者父节点的左节点为空，则父节点为最小节点，将父节点返回。
      *
-     * @param head
-     * @return
+     * @param head 将查询的树的根结点
+     * @return 树中的最小结点
      */
     static Node<Integer> treeMinimumRecurse(Node<Integer> head) {
         if (head == null || head.getLeft() == null) {
@@ -31,8 +31,8 @@ public class SearchTree12_2 {
      * 刚将父节点的右节点赋值结父节点。进入步骤1，如果父节点为空，则返回空
      * 或者父节点的右节点为空，则返回父节点。（此时父节点是最右边的一个节点）
      *
-     * @param head
-     * @return
+     * @param head 根结点
+     * @return 返回以head为树根的最大结点
      */
     static Node<Integer> treeMaximumRecurse(Node<Integer> head) {
         if (head == null || head.getRight() == null) {
@@ -91,8 +91,8 @@ public class SearchTree12_2 {
     /**
      * 找到一个结点的后继，即大于这个结点的最小结点。
      *
-     * @param head
-     * @return
+     * @param head 普通结点
+     * @return 返回以head为结点head的后继
      */
     public static Node<Integer> treeDecessor(Node<Integer> head) {
         if (head == null) {
@@ -117,7 +117,7 @@ public class SearchTree12_2 {
         return null;
     }
     // 12.2=5
-    /**
+    /*
      * 12.2-5 证明：如果一棵二叉搜索树中的一个结点有两个孩子，那么它的后继没有左孩子，它的前驱没有右孩子。
      *
      * 1、在之前我们证明过如果一个结点有左孩子，那么它的那的前驱一定为左子树中的最大者。
@@ -128,7 +128,7 @@ public class SearchTree12_2 {
      */
 
     // 12.2-6
-    /**
+    /*
      * 12.2-6 考虑一棵二叉搜索树T，其关键字互不相同。证明：如果T中一个结点x的右子树为空，且x有一个后继y，
      *        那么y一定是最底层祖先，并且其左孩子也是x的祖先。（注意到，每个结点都是它自己的祖先。）
      *
@@ -145,7 +145,7 @@ public class SearchTree12_2 {
      */
 
     // 12.2-7
-    /**
+    /*
      * 12.2-7 对于一棵有n个结点的二叉搜索树，有另一个方法来实现中序遍历，先调用TREE-MINIMUM找到这棵树中的最小元素
      *        ，然后再调用n-1次的TREE-SUCCESSOR。证明：该算法的运行时间为Θ(n)。
      *
@@ -155,14 +155,14 @@ public class SearchTree12_2 {
      */
 
     // 12.2-8
-    /**
+    /*
      * 12.2.8 证明在一棵高度为h的二叉搜索树中，不论从哪个结点开始，k次连续的TREE-SUCCESSOR调用时间为O（k+h）。
      *
      * 证明：TODO
      */
 
     // 12.2-9
-    /**
+    /*
      * 12.2-9 设T是一棵二叉搜索树，其关键字互不相同；设x是一个叶结点，y为其父结点。证明：y.key或者是T树中大于x.key的最小关键字
      *        或者是小于x.key的最大关键字。
      *
@@ -177,7 +177,7 @@ public class SearchTree12_2 {
      * 测试前序遍历的正确性
      */
     @Test
-    public void testPredecessor() {
+    void testPredecessor() {
         Tree<Integer> tree = Node.buildSearchTree(50);
         SearchTree12_1.inorderVisitNoRecurse(tree);
         System.out.println("******************");

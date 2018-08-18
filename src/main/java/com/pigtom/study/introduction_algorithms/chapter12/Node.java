@@ -74,9 +74,10 @@ public class Node<T> {
     /**
      * 插入一个结点，保证原搜索树的特点：左子树的结点关键字全部不大于父结点，右子树的结点关键字不小于父结点关键字
      *
-     * @param tree
-     * @param node
+     * @param tree 树根
+     * @param node 将要被插入的结点
      */
+    @SuppressWarnings(value = "unused")
     public static void insertNode(Tree<Integer> tree, Node<Integer> node) {
         Node<Integer> parent = new Node<>();
         // 将当头结点设为父结点的左结点
@@ -120,8 +121,8 @@ public class Node<T> {
     /**
      * 用更简洁的方式插入一个元素
      *
-     * @param tree
-     * @param node
+     * @param tree 树根
+     * @param node 将要被插入的结点
      */
     public static void insert(Tree<Integer> tree, Node<Integer> node) {
         Node<Integer> p = null;
@@ -141,6 +142,33 @@ public class Node<T> {
             p.left = node;
         } else {
             p.right = node;
+        }
+    }
+
+    /**
+     * 将树中的结点X完全被另一个结点y取代;
+     * 意味着以结点x为子树将全部被取代。
+     * 具体操作：
+     * 将结点x的父结点记作p：将y的父结点设为p
+     * 1、如果结点x的父结点p存在，
+     * 结点x为左孩子 则将结点y作为p的左孩子
+     * 结点x为右孩子 则将结点y作为p的右孩子
+     * 2、如果p不存在
+     * 将树tree的根设为y
+     *
+     * @param tree
+     * @param u    不能为空
+     * @param v    要取代的值
+     * @throws NullPointerException
+     */
+    public static void transplant(Tree<Integer> tree, Node<Integer> u, Node<Integer> v) {
+        if (u.getParent() == null) {
+            tree.setRoot(v);
+        } else if (u == u.getParent().getLeft()) {
+            u.getParent().setLeft(v);
+        } else u.getParent().setRight(v);
+        if (v != null) {
+            v.setParent(u.getParent());
         }
     }
 }

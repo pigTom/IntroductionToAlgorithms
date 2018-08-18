@@ -1,7 +1,3 @@
-/**
- * AUTHOR : Administrator
- * DATE : 2018/7/25
- **/
 package com.pigtom.study.introduction_algorithms.chapter12;
 
 import org.junit.jupiter.api.Test;
@@ -10,6 +6,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import static com.pigtom.study.introduction_algorithms.chapter12.Node.transplant;
+
+/**
+ * AUTHOR : Administrator
+ * DATE : 2018/7/25
+ **/
 public class SearchTree12_3 {
 
     /**
@@ -48,9 +50,9 @@ public class SearchTree12_3 {
     /**
      * 查询树中包含给定关键字的一个节点，默认先和根匹配
      *
-     * @param key
-     * @param tree
-     * @return
+     * @param key 将要被匹配的关键词
+     * @param tree 搜索树
+     * @return 含有关键字的结点
      */
     public static Node<Integer> search(int key, Tree<Integer> tree) {
         // find node
@@ -68,7 +70,7 @@ public class SearchTree12_3 {
     }
 
     @Test
-    public void testSearch() {
+    void testSearch() {
         Tree<Integer> tree = Node.buildSearchTree(20);
         SearchTree12_1.inorderVisitNoRecurse(tree);
         Node<Integer> note = search(3, tree);
@@ -91,8 +93,8 @@ public class SearchTree12_3 {
      * x一定没有左结点，将x结点的右结点记作xRight,x的父结点记作xP,将xp.left = xRight,
      * yP.child = x, x.left = y.left and x.right = x.right
      *
-     * @param key
-     * @param tree
+     * @param key 关键字
+     * @param tree 树对象
      */
     public void deleteNode(int key, Tree<Integer> tree) throws Exception {
         // find node
@@ -117,7 +119,7 @@ public class SearchTree12_3 {
     }
 
     @Test
-    public void testExchangeNode() throws Exception {
+    public void testExchangeNode() {
         Tree<Integer> tree = Node.buildSearchTree(0, 10);
         SearchTree12_1.preorderVisitRecurse(tree.getRoot());
         System.out.println("*************");
@@ -153,32 +155,6 @@ public class SearchTree12_3 {
         }
     }
 
-    /**
-     * 将树中的结点X完全被另一个结点y取代;
-     * 意味着以结点x为子树将全部被取代。
-     * 具体操作：
-     * 将结点x的父结点记作p：将y的父结点设为p
-     * 1、如果结点x的父结点p存在，
-     * 结点x为左孩子 则将结点y作为p的左孩子
-     * 结点x为右孩子 则将结点y作为p的右孩子
-     * 2、如果p不存在
-     * 将树tree的根设为y
-     *
-     * @param tree
-     * @param u    不能为空
-     * @param v    要取代的值
-     * @throws NullPointerException
-     */
-    public void transplant(Tree<Integer> tree, Node<Integer> u, Node<Integer> v) {
-        if (u.getParent() == null) {
-            tree.setRoot(v);
-        } else if (u == u.getParent().getLeft()) {
-            u.getParent().setLeft(v);
-        } else u.getParent().setRight(v);
-        if (v != null) {
-            v.setParent(u.getParent());
-        }
-    }
 
     public void delete(int key, Tree<Integer> tree) {
         Node<Integer> node = search(key, tree);
@@ -379,7 +355,6 @@ public class SearchTree12_3 {
             } else //否则说明x有右结点要让n插入x的子树中
             {
                 x = x.succ;
-                continue;
             }
 
         }

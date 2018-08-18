@@ -27,7 +27,7 @@ public class SearchTree12_1 {
     }
 
     @Test
-    public void testInorderVisit() {
+    void testInorderVisit() {
         Tree<Integer> tree = buildSearchTree(100);
         System.out.println("___________________________");
         inorderVisitRecurse(tree.getRoot());
@@ -36,7 +36,7 @@ public class SearchTree12_1 {
     }
 
     @Test
-    public void testPreorderVisit() {
+    void testPreorderVisit() {
         Tree<Integer> tree = buildSearchTree(20);
         preorderVisitRecurse(tree.getRoot());
         System.out.println("___________________________");
@@ -138,8 +138,9 @@ public class SearchTree12_1 {
      * 父节点变成祖父节点进入步骤3
      * 如果不是 父节点变成祖父节点进入步骤2.
      *
-     * @param head
+     * @param head 根结点
      */
+    @SuppressWarnings(value = "Access can be private")
     public void preorderVisitNoRecurse(Node<Integer> head) {
         Node<Integer> parent = head;
         while (parent != null) {
