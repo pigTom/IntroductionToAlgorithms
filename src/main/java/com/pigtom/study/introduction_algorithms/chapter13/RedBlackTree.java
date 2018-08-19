@@ -3,6 +3,7 @@ package com.pigtom.study.introduction_algorithms.chapter13;
 import com.pigtom.study.introduction_algorithms.chapter12.ColorEnum;
 import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -12,13 +13,18 @@ import org.junit.jupiter.api.Test;
  */
 public class RedBlackTree {
 
-    private Node<Integer> NIL = new Node<>();
-
+    private static Node<Integer> NIL = new Node<>();
+    static {
+        NIL.setColor(ColorEnum.RED);
+    }
     public void leftRotate(Tree<Integer> tree, Node<Integer> x) {
         Node<Integer> node = x.getRight();
         // y can not be NIL
         x.setRight(node.getLeft());
-        node.getLeft().setParent(x);
+        Assertions.assertNotEquals(node, NIL, "wrong");
+        if (node != NIL) {
+            node.getLeft().setParent(x);
+        }
         replace(tree, x, node);
         node.setLeft(x);
         x.setParent(node);
@@ -27,8 +33,10 @@ public class RedBlackTree {
     public void rightRotate(Tree<Integer> tree, Node<Integer> x) {
         Node<Integer> nodeX = x.getLeft();
         x.setLeft(nodeX.getRight());
-        nodeX.getRight().setParent(x);
-
+        Assertions.assertNotEquals(nodeX, NIL, "wrong");
+        if (nodeX != NIL) {
+            nodeX.getRight().setParent(x);
+        }
         replace(tree, x, nodeX);
         nodeX.setRight(x);
         x.setParent(nodeX);
@@ -232,8 +240,8 @@ public class RedBlackTree {
      * 用v来代替u，以u为根的树会全部被替换成以v为根的树
      *
      * @param tree 树根
-     * @param u    要被替换的结点
-     * @param v    要替换的结点
+     * @param u    要被替换的结点 (u不能为NIL)
+     * @param v    要替换的结点 （v可能是NIL)
      */
     private void replace(Tree<Integer> tree, Node<Integer> u, Node<Integer> v) {
         // u is root node
@@ -245,11 +253,13 @@ public class RedBlackTree {
         } else u.getParent().setRight(v);
         v.setParent(u.getParent());
     }
-
+    int delete = 0;
     public void delete(Tree<Integer> tree, Node<Integer> z) {
+//        NIL.setParent(null);
         if (z == NIL) {
             return;
         }
+        delete++;
         // 三种情况
         Node<Integer> x;
         Node<Integer> y;
@@ -259,7 +269,7 @@ public class RedBlackTree {
             x = z.getRight();
             replace(tree, z, x);
         } else if (z.getRight() == NIL) {
-            // 如果右结点为农药，用左结点代替z，因为z没有右结点，所以，不用处理z的右结点
+            // 如果右结点为空，用左结点代替z，因为z没有右结点，所以，不用处理z的右结点
             x = z.getLeft();
             replace(tree, z, x);
         } else {
@@ -303,51 +313,133 @@ public class RedBlackTree {
 
 
     void deleteColorFix(Tree<Integer> tree, Node<Integer> x) {
-        while (x.getColor().equals(ColorEnum.BLACK) && x != tree.getRoot()) {
-            Node<Integer> brother = x.getParent().getRight();
+        while (x != tree.getRoot() && x.getColor().equals(ColorEnum.BLACK)) {
             if (x.getParent().getLeft() == x) {
-                // x为左结点,x为黑色说明x一定为哨兵
-                // 且现有的兄弟结点是一定是黑结点
-                // x 变成 x的兄弟然后左旋，有两种情况：
-                // 1. 如果x的父亲是红色，那么旋转之后树就平衡了，因为一在x是黑色
-                // 2. 如果x的父亲是黑色，那么现是不平衡的，需要再往上走
-                if (brother.getColor().equals(ColorEnum.BLACK)) {
-                    // 兄弟结点的颜色是黑色的
-                    // 将父结点的颜色赋给兄弟结点
-                    brother.setColor(x.getParent().getColor());
-                    x.getParent().setColor(ColorEnum.RED);
-                    x = brother;
-                    leftRotate(tree, x.getParent());
-                } else {
+                Node<Integer> brother = x.getParent().getRight();
+
+                // case 1
+                if (brother.getColor().equals(ColorEnum.RED)) {
                     // 兄弟结点的颜色是红色的，那么父结点的颜色一定是黑色的
                     // 将父结点的颜色变成红色，兄弟结点的颜色变成黑色
                     // 左旋
                     brother.setColor(ColorEnum.BLACK);
-                    brother.getParent().setColor(ColorEnum.BLACK);
-                    x = brother;
+                    x.getParent().setColor(ColorEnum.RED);
                     leftRotate(tree, brother.getParent());
+                    brother = x.getParent().getRight();
+                    // goto case 2
                 }
+                // case 2
+                // 1 all black
+                if (brother.getRight().getColor().equals(ColorEnum.BLACK) &&
+                        brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
+                    brother.setColor(ColorEnum.RED);
+                    x = x.getParent();
+                    continue;
+                }
+//                // 2 all red
+//                else if (brother.getLeft().getColor().equals(ColorEnum.RED) &&
+//                        brother.getRight().getColor().equals(ColorEnum.RED)) {
+//                    brother.setColor(x.getParent().getColor());
+//                    x.getParent().setColor(ColorEnum.BLACK);
+//                    brother.getRight().setColor(ColorEnum.BLACK);
+//                    x = x.getParent();
+//                    break;
+//                }
+                // 2 left red and right black
+                else if (brother.getRight().getColor().equals(ColorEnum.BLACK)) {
+                    brother.setColor(ColorEnum.RED);
+                    brother.getLeft().setColor(ColorEnum.BLACK);
+                    rightRotate(tree, brother);
+                    brother = x.getParent().getRight();
+                    // goto 4
+                }
+                // 4 right red
+                if (brother == NIL) {
+                    Assertions.fail("brother can not be NIL");
+                }
+                brother.setColor(x.getParent().getColor());
+                x.getParent().setColor(ColorEnum.BLACK);
+                brother.getRight().setColor(ColorEnum.BLACK);
+                leftRotate(tree, x.getParent());
+                x = tree.getRoot();
+                break;
             }
 
             // x是右结点，操作与上面相反
             else {
-                if (brother.getColor().equals(ColorEnum.BLACK)) {
-                    // 兄弟结点的颜色是黑色的
-                    // 将父结点的颜色赋给兄弟结点
-                    brother.setColor(x.getParent().getColor());
-                    x.getParent().setColor(ColorEnum.RED);
-                    x = brother;
-                    rightRotate(tree, x.getParent());
-                } else {
+//                Node<Integer> brother = x.getParent().getLeft();
+//                // case 3
+//                if (brother.getColor().equals(ColorEnum.RED)) {
+//                    // 兄弟结点的颜色是红色的，那么父结点的颜色一定是黑色的
+//                    // 将父结点的颜色变成红色，兄弟结点的颜色变成黑色
+//                    // 右旋
+//                    brother.setColor(ColorEnum.BLACK);
+//                    x.getParent().setColor(ColorEnum.RED);
+//                    rightRotate(tree, x.getParent());
+//                    brother = x.getParent().getLeft();
+//                    // goto case 4
+//                }
+//                // case 4
+//                // 1 all black
+//                if (brother.getRight().getColor().equals(ColorEnum.BLACK) &&
+//                        brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
+//                    brother.setColor(ColorEnum.RED);
+//                    x = x.getParent();
+//                    continue;
+//                }
+//                // 3 right red and left black
+//                else if (brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
+//                    brother.setColor(ColorEnum.RED);
+//                    brother.getRight().setColor(ColorEnum.BLACK);
+//                    leftRotate(tree, brother);
+//                    brother = x.getParent().getLeft();
+//                    // goto 4
+//                }
+//                // 4 left red
+//                brother.setColor(x.getParent().getColor());
+//                x.getParent().setColor(ColorEnum.BLACK);
+//                brother.getLeft().setColor(ColorEnum.BLACK);
+//                rightRotate(tree, x.getParent());
+//                x = tree.getRoot();
+//                break;
+                Node<Integer> brother = x.getParent().getLeft();
+                // case 1
+                if (brother.getColor().equals(ColorEnum.RED)) {
                     // 兄弟结点的颜色是红色的，那么父结点的颜色一定是黑色的
                     // 将父结点的颜色变成红色，兄弟结点的颜色变成黑色
-                    // 右旋
+                    // 左旋
                     brother.setColor(ColorEnum.BLACK);
-                    brother.getParent().setColor(ColorEnum.BLACK);
-                    x = brother;
+                    x.getParent().setColor(ColorEnum.RED);
                     rightRotate(tree, brother.getParent());
+                    brother = x.getParent().getLeft();
+                    // goto case 2
                 }
-
+                // case 2
+                // 1 all black
+                if (brother.getLeft().getColor().equals(ColorEnum.BLACK) &&
+                        brother.getRight().getColor().equals(ColorEnum.BLACK)) {
+                    brother.setColor(ColorEnum.RED);
+                    x = x.getParent();
+                    continue;
+                }
+                // 2 left red and right black
+                else if (brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
+                    brother.setColor(ColorEnum.RED);
+                    brother.getRight().setColor(ColorEnum.BLACK);
+                    leftRotate(tree, brother);
+                    brother = x.getParent().getLeft();
+                    // goto 4
+                }
+                // 4 right red
+                if (brother == NIL) {
+                    Assertions.fail("brother can not be NIL");
+                }
+                brother.setColor(x.getParent().getColor());
+                x.getParent().setColor(ColorEnum.BLACK);
+                brother.getLeft().setColor(ColorEnum.BLACK);
+                rightRotate(tree, x.getParent());
+                x = tree.getRoot();
+                break;
             }
         }
         x.setColor(ColorEnum.BLACK);
@@ -357,33 +449,75 @@ public class RedBlackTree {
     public void testBuild() {
         int num = 10;
         Tree<Integer> tree = buildTree(num);
-//        i(tree);
+        inorderVisit(tree);
+        testRBTree(tree);
+    }
+
+    private String message = "不满足性质5：对每个结点，从该结点到其所有后代的简单路径上，均包含相同数目的黑色结点。";
+    void testRBTree(Tree<Integer> tree) {
+        Assertions.assertEquals(tree.getRoot().getColor(), ColorEnum.BLACK, "不满足性质2: 根必须是黑色的");
+        if (tree.getRoot() != NIL) {
+            int i = countBlackNode(tree.getRoot().getLeft());
+            int j = countBlackNode(tree.getRoot().getRight());
+            Assertions.assertEquals(i,j ,message);
+        }
+    }
+    public void testRBTreeColor(Node<Integer> node) {
+        boolean flag = true;
+        if (node.getColor() == ColorEnum.RED) {
+            flag = node.getRight().getColor() == ColorEnum.BLACK
+                    && node.getLeft().getColor() == ColorEnum.BLACK;
+        }
+        Assertions.assertTrue(flag, "不满足性质4:如果一个结点是红色的，那么它的每个孩子结点都是黑色的");
+    }
+
+    int countBlackNode(Node<Integer> node) {
+        if (node == NIL) {
+            return 1;
+        } else {
+            int i = countBlackNode(node.getLeft());
+            int j = countBlackNode(node.getRight());
+            Assertions.assertEquals(i, j, message);
+            if (node.getColor() == ColorEnum.BLACK) {
+                return i + 1;
+            }
+            testRBTreeColor(node);
+            return i;
+        }
     }
 
     @Test
     public void testDelete() {
         NIL.setColor(ColorEnum.BLACK);
-        for (int i = 0; i < 3; i++) {
-            int size = 10;
+        for (int i = 0; i < 1; i++) {
+            int size = 50;
             Tree<Integer> tree = buildTree(size);
+            System.out.println("start-->");
             inorderVisit(tree);
-            int num = (int) (Math.random() * size);
-            System.out.println("*******" + num + "*******");
-            Node<Integer> node = search(num, tree);
-            delete(tree, node);
-            inorderVisit(tree);
-            System.out.println("\r\r");
+            for (int j = 0; j <= size; j++) {
+
+                Node<Integer> node = NIL;
+                System.out.println("*******" + j + "*******");
+                node = search(j, tree);
+                delete(tree, node);
+            }
+            i = inorderVisit(tree);
+            System.out.println("end-->");
+            System.out.println("delete: " + delete);
+            Assertions.assertEquals(delete, (size - i), "error");
+            System.out.println("\r");
         }
     }
 
     int i = 0;
 
-    public void inorderVisit(Tree<Integer> tree) {
+    public int inorderVisit(Tree<Integer> tree) {
         i = 0;
         if (tree.getRoot() != NIL) {
             inorderVisitRecurse(tree.getRoot());
         }
         System.out.println("cont : " + i);
+        return i;
     }
 
     private void inorderVisitRecurse(Node<Integer> node) {
