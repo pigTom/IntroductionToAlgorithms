@@ -363,7 +363,7 @@ public class RedBlackTree {
     @Test
     public void testDelete() {
         NIL.setColor(ColorEnum.BLACK);
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 3; i++) {
             int size = 10;
             Tree<Integer> tree = buildTree(size);
             inorderVisit(tree);
@@ -372,7 +372,7 @@ public class RedBlackTree {
             Node<Integer> node = search(num, tree);
             delete(tree, node);
             inorderVisit(tree);
-            System.out.println("\r");
+            System.out.println("\r\r");
         }
     }
 
