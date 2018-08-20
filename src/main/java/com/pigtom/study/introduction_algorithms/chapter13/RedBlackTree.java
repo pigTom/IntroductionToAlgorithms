@@ -138,21 +138,21 @@ public class RedBlackTree {
         Node<Integer> y = NIL;
         Node<Integer> temp = tree.getRoot();
         while (temp != NIL) {
-            y = temp;
+            y = temp;  // y 指向temp的父结点
             if (node.getKey() < temp.getKey()) {
                 temp = temp.getLeft();
             } else temp = temp.getRight();
         }
 
-        if (y == NIL) {
+        if (y == NIL) { // 如果y是NIL，说明tree is empty
             tree.setRoot(node);
             node.setColor(ColorEnum.BLACK);
-            return;
-        } else if (node.getKey() < y.getKey()) {
+            return; // 不用颜色处理
+        } else if (node.getKey() < y.getKey()) { // node的key小于y的key，将node插入到y的左结点，因为node的左结点一定是NIL
             y.setLeft(node);
             node.setParent(y);
             node.setColor(ColorEnum.RED);
-        } else {
+        } else { // node的key大于或等于y的key，将node插入到y的右结点，y的右结点肯定是NIL
             y.setRight(node);
             node.setParent(y);
             node.setColor(ColorEnum.RED);
@@ -163,7 +163,7 @@ public class RedBlackTree {
     /**
      * 当前结点是红色
      * 1，如果当前结点的父结点是红色，并且如果当前结点的叔叔结点也是红色，
-     * 则将当前结点的父结点和叔叔颜色都变成黑色。祖父结点的颜色变成黑色。
+     * 则将当前结点的父结点和叔叔颜色都变成黑色。祖父结点的颜色变成红色。
      * 2、如果当前结点的叔叔结点是黑色，
      *
      * @param tree
@@ -196,7 +196,6 @@ public class RedBlackTree {
                 }
             } else {
                 // 父结点是右结点
-
                 // 叔叔结点是红色的
                 if (grandPa.getLeft().getColor().equals(ColorEnum.RED)) {
                     grandPa.setColor(ColorEnum.RED);
@@ -232,6 +231,7 @@ public class RedBlackTree {
             node.setRight(NIL);
             node.setLeft(NIL);
             insert(tree, node);
+            testRBTree(tree);
         }
         return tree;
     }
