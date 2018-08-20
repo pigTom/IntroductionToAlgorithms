@@ -171,14 +171,14 @@ public class RedBlackTree {
      */
     public void colorFix(Tree<Integer> tree, Node<Integer> z) {
         // 父结点是红色的
-        while (z.getParent() != NIL && z.getParent().getColor().equals(ColorEnum.RED)) {
+        while (z.getParent().getColor().equals(ColorEnum.RED)) {
             // 因为父结点是红色的，所以祖父一定不为空
             Node<Integer> grandPa = z.getParent().getParent();
 
             // 父结点是左结点
             if (grandPa.getLeft() == z.getParent()) {
                 // 叔叔是红色的
-                if (grandPa.getRight() != NIL && grandPa.getRight().getColor().equals(ColorEnum.RED)) {
+                if (grandPa.getRight().getColor().equals(ColorEnum.RED)) {
                     grandPa.setColor(ColorEnum.RED);
                     grandPa.getRight().setColor(ColorEnum.BLACK);
                     grandPa.getLeft().setColor(ColorEnum.BLACK);
@@ -198,7 +198,7 @@ public class RedBlackTree {
                 // 父结点是右结点
 
                 // 叔叔结点是红色的
-                if (grandPa.getLeft() != NIL && grandPa.getLeft().getColor().equals(ColorEnum.RED)) {
+                if (grandPa.getLeft().getColor().equals(ColorEnum.RED)) {
                     grandPa.setColor(ColorEnum.RED);
                     grandPa.getLeft().setColor(ColorEnum.BLACK);
                     grandPa.getRight().setColor(ColorEnum.BLACK);
