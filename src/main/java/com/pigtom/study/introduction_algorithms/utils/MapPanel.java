@@ -1,8 +1,10 @@
 package com.pigtom.study.introduction_algorithms.utils;
 
+import com.pigtom.study.introduction_algorithms.chapter12.ColorEnum;
 import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
 import com.pigtom.study.introduction_algorithms.chapter13.RedBlackTree;
+import org.springframework.stereotype.Service;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,23 +14,22 @@ import java.awt.*;
  * @Author tangDunhong@163.com
  * @Date Created in 2018/8/21 8:44
  */
+@Service
 public class MapPanel<T>  extends JPanel {
     private Tree<T> tree;
 
     private Graphics2D g;
     public MapPanel(Tree<T> tree) {
         this.tree = tree;
-        handlePosition(tree);
+//        handlePosition(tree);
     }
-    int radius = 20;
-    int height = 30;
+    int radius = 15;
+    int height = 50;
     @Override
     public void paint(Graphics gp) {
         super.paint(gp);
         g = (Graphics2D) gp;
-        g.translate(this.getWidth() / 2, 0);
-        g.setColor(Color.green);
-        redNode(g, 0, 0);
+        handlePosition(tree);
     }
 
     private void fillCircle(Graphics2D g, int centerX, int centerY, int radius) {
@@ -59,21 +60,28 @@ public class MapPanel<T>  extends JPanel {
      * 根据node的宽度和位置计算，node孩子的宽度和位置。
      * 如果node不为NIL,则node一定有左孩子和右孩子
      * @param node
-     * @param <T>
      */
-    private <T> void handlePosition(Node<T> node) {
+    private void handlePosition(Node<T> node) {
+
+
         if (node != RedBlackTree.NIL) {
+
+            if (node.getColor() == ColorEnum.BLACK) {
+                blackNode(g, node.x, node.y);
+            } else redNode(g, node.x, node.y);
+
+
             int width = node.width/2;
             Node<T> left = node.getLeft();
             left.width = width;
             left.x = node.x - width;
-            left.y = height;
+            left.y = height + node.y;
             handlePosition(left);
 
             Node<T> right = node.getRight();
             right.width = width;
             right.x = node.x + width;
-            right.y = height;
+            right.y = height+ node.y;
             handlePosition(right);
         }
     }

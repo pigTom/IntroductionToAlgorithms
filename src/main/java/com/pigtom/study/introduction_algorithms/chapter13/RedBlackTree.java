@@ -3,8 +3,10 @@ package com.pigtom.study.introduction_algorithms.chapter13;
 import com.pigtom.study.introduction_algorithms.chapter12.ColorEnum;
 import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
 
 /**
  * @Description
@@ -12,10 +14,10 @@ import org.junit.jupiter.api.Test;
  * @Date Created in 2018/8/6 10:25
  */
 public class RedBlackTree {
-
+    Logger log = Logger.getLogger(RedBlackTree.class);
     public static Node<Integer> NIL = new Node<>();
     static {
-        NIL.setColor(ColorEnum.RED);
+        NIL.setColor(ColorEnum.BLACK);
     }
     public void leftRotate(Tree<Integer> tree, Node<Integer> x) {
         Node<Integer> node = x.getRight();
@@ -177,41 +179,41 @@ public class RedBlackTree {
 
             // 父结点是左结点
             if (grandPa.getLeft() == z.getParent()) {
+                Node y = z.getParent().getRight();
                 // 叔叔是红色的
-                if (grandPa.getRight().getColor().equals(ColorEnum.RED)) {
+                if (y.getColor().equals(ColorEnum.RED)) {
                     grandPa.setColor(ColorEnum.RED);
-                    grandPa.getRight().setColor(ColorEnum.BLACK);
-                    grandPa.getLeft().setColor(ColorEnum.BLACK);
-                    z = grandPa;
-                    // 叔叔是黑色的且z是左结点
-                } else if (z.getParent().getLeft() == z) {
+                    y.setColor(ColorEnum.BLACK);
                     z.getParent().setColor(ColorEnum.BLACK);
-                    grandPa.setColor(ColorEnum.RED);
-                    z = z.getParent();
-                    rightRotate(tree, z.getParent());
-                } else {
+                    z = grandPa;
+                    continue;
                     // 叔叔是黑色的且z是右结点
+                } else if (z.getParent().getRight() == z) {
                     z = z.getParent();
                     leftRotate(tree, z);
                 }
+                // 叔叔是黑色的且z是左结点
+                z.getParent().setColor(ColorEnum.BLACK);
+                z.getParent().getParent().setColor(ColorEnum.RED);
+                rightRotate(tree, z.getParent().getParent());
             } else {
                 // 父结点是右结点
                 // 叔叔结点是红色的
-                if (grandPa.getLeft().getColor().equals(ColorEnum.RED)) {
+                Node<Integer> y = grandPa.getLeft();
+                if (y.getColor().equals(ColorEnum.RED)) {
                     grandPa.setColor(ColorEnum.RED);
-                    grandPa.getLeft().setColor(ColorEnum.BLACK);
-                    grandPa.getRight().setColor(ColorEnum.BLACK);
-                    z = grandPa;
-                } else if (z.getParent().getRight() == z) {
-                    // z是右结点
+                    y.setColor(ColorEnum.BLACK);
                     z.getParent().setColor(ColorEnum.BLACK);
-                    grandPa.setColor(ColorEnum.RED);
-                    z = z.getParent();
-                    leftRotate(tree, z.getParent());
-                } else {
+                    z = grandPa;
+                    continue;
+                } else if (z.getParent().getLeft() == z) {
                     z = z.getParent();
                     rightRotate(tree, z);
                 }
+                // z是右结点
+                z.getParent().setColor(ColorEnum.BLACK);
+                z.getParent().getParent().setColor(ColorEnum.RED);
+                leftRotate(tree,z.getParent().getParent() );
             }
         }
         // 有几种情况(z是红色的)
@@ -220,12 +222,13 @@ public class RedBlackTree {
         tree.getRoot().setColor(ColorEnum.BLACK);
     }
 
-    Tree<Integer> buildTree(int i) {
+    public Tree<Integer> buildTree(int i) {
         Tree<Integer> tree = new Tree<>();
         tree.setRoot(NIL);
         for (int j = 0; j < i; j++) {
             Node<Integer> node = new Node<>();
             int num = (int) (Math.random() * i + 1);
+            System.out.println("insert--> " + num);
             node.setKey(num);
             node.setParent(NIL);
             node.setRight(NIL);
@@ -453,22 +456,43 @@ public class RedBlackTree {
         testRBTree(tree);
     }
 
-    private String message = "不满足性质5：对每个结点，从该结点到其所有后代的简单路径上，均包含相同数目的黑色结点。";
-    void testRBTree(Tree<Integer> tree) {
-        Assertions.assertEquals(tree.getRoot().getColor(), ColorEnum.BLACK, "不满足性质2: 根必须是黑色的");
+    private String message5 = "不满足性质5：对每个结点，从该结点到其所有后代的简单路径上，均包含相同数目的黑色结点。";
+    private String message4 = "不满足性质4:如果一个结点是红色的，那么它的每个孩子结点都是黑色的";
+
+    private String message1 = "不满足性质2：根结点必须是黑色。";
+    boolean testRBTree(Tree<Integer> tree) {
+        if (tree.getRoot().getColor() != ColorEnum.BLACK) {
+            log.info(message1 + "[node.key " + tree.getRoot().getKey() + "]");
+            return false;
+        };
         if (tree.getRoot() != NIL) {
             int i = countBlackNode(tree.getRoot().getLeft());
+            if (i == -1) {
+                return false;
+            }
             int j = countBlackNode(tree.getRoot().getRight());
-            Assertions.assertEquals(i,j ,message);
+            if (j == -1) {
+                return false;
+            }
+            if (j != i) {
+                log.info(message5 + "[node.key " + tree.getRoot().getKey()
+                + "]");
+                return false;
+            }
         }
+        return true;
     }
-    public void testRBTreeColor(Node<Integer> node) {
+    public boolean testRBTreeColor(Node<Integer> node) {
         boolean flag = true;
         if (node.getColor() == ColorEnum.RED) {
             flag = node.getRight().getColor() == ColorEnum.BLACK
                     && node.getLeft().getColor() == ColorEnum.BLACK;
         }
-        Assertions.assertTrue(flag, "不满足性质4:如果一个结点是红色的，那么它的每个孩子结点都是黑色的");
+        if (!flag) {
+            log.info(message4 + "[node.key " + node.getKey() + "]");
+            return false;
+        }
+        return true;
     }
 
     int countBlackNode(Node<Integer> node) {
@@ -476,12 +500,25 @@ public class RedBlackTree {
             return 1;
         } else {
             int i = countBlackNode(node.getLeft());
+            if (i == -1) {
+                return -1;
+            }
             int j = countBlackNode(node.getRight());
-            Assertions.assertEquals(i, j, message);
+            if (j == -1) {
+                return -1;
+            }
+            if (j != i) {
+                log.info(message5 + "[node.key " + node.getKey()
+                        + "]");
+                return -1;
+            }
             if (node.getColor() == ColorEnum.BLACK) {
                 return i + 1;
             }
-            testRBTreeColor(node);
+            boolean flag = testRBTreeColor(node);
+            if (!flag) {
+                return -1;
+            }
             return i;
         }
     }

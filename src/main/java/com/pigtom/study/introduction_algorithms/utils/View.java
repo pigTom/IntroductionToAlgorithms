@@ -1,5 +1,8 @@
 package com.pigtom.study.introduction_algorithms.utils;
 
+import com.pigtom.study.introduction_algorithms.chapter12.Tree;
+import com.pigtom.study.introduction_algorithms.chapter13.RedBlackTree;
+
 /**
  * @Description
  * @Author tangDunhong@163.com
@@ -7,7 +10,9 @@ package com.pigtom.study.introduction_algorithms.utils;
  */
 public class View {
     public static void main(String args[]) {
-        MapPanel panel = new MapPanel();
+        RedBlackTree tree = new RedBlackTree();
+        Tree<Integer> tree1 = tree.buildTree(5);
+        MapPanel<Integer> panel = new MapPanel<>(tree1);
         MapFrame app = new MapFrame(panel);
         app.setVisible(true);
     }
