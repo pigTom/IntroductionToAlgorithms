@@ -6,6 +6,15 @@ public class Node<T> {
     private Node<T> right;
     private ColorEnum color;
     private T key;
+    /**
+     * position in horizontal
+     */
+    public int x;
+    /**
+     * position in vertical
+     */
+    public int y;
+    public int width;
 
     public Node<T> getParent() {
         return parent;

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
  */
 public class RedBlackTree {
 
-    private static Node<Integer> NIL = new Node<>();
+    public static Node<Integer> NIL = new Node<>();
     static {
         NIL.setColor(ColorEnum.RED);
     }
