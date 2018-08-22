@@ -30,39 +30,47 @@ public class ImageSave {
         }
         FileFilter fileFilter = new FileNameExtensionFilter("png file", "png", "jpeg");
 
-        chooser.setSelectedFile(selectedFile);
-        chooser.addChoosableFileFilter(fileFilter);
-        int returnVal = chooser.showSaveDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            selectedFile = chooser.getSelectedFile();
-            System.out.println("You chose to save this file: " +
-                    selectedFile.getName());
-
-            if(selectedFile.getName().trim().length()==0){
-                JOptionPane.showMessageDialog(null, "文件名为空！");
-            }
-            directory = chooser.getCurrentDirectory();//获得当前目录
-
-            path = directory.getPath()+java.io.File.separator+selectedFile.getName();
-            selectedFile =new File(path);
-
-            if(selectedFile.exists()) {  //若选择已有文件----询问是否要覆盖
-                int con = JOptionPane.showConfirmDialog(null, "该文件已经存在，确定要覆盖吗？");
-                if(con == JOptionPane.YES_OPTION)   ;
-                else if (con == JOptionPane.NO_OPTION) {
-                    save(image);
-                } else {
-                    return;
-                }
-
-            }
-            try {
-                if (image != null)
-                    ImageIO.write(image, "PNG", selectedFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            if (image != null)
+                ImageIO.write(image, "PNG", selectedFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
+//        chooser.setSelectedFile(selectedFile);
+//        chooser.addChoosableFileFilter(fileFilter);
+//        int returnVal = chooser.showSaveDialog(null);
+//        if(returnVal == JFileChooser.APPROVE_OPTION) {
+//            selectedFile = chooser.getSelectedFile();
+//            System.out.println("You chose to save this file: " +
+//                    selectedFile.getName());
+//
+//            if(selectedFile.getName().trim().length()==0){
+//                JOptionPane.showMessageDialog(null, "文件名为空！");
+//            }
+//            directory = chooser.getCurrentDirectory();//获得当前目录
+//
+//            path = directory.getPath()+java.io.File.separator+selectedFile.getName();
+//            selectedFile =new File(path);
+//
+//            if(selectedFile.exists()) {  //若选择已有文件----询问是否要覆盖
+//                int con = JOptionPane.showConfirmDialog(null, "该文件已经存在，确定要覆盖吗？");
+//                if(con == JOptionPane.YES_OPTION)   ;
+//                else if (con == JOptionPane.NO_OPTION) {
+//                    save(image);
+//                } else {
+//                    return;
+//                }
+//
+//            }
+//            try {
+//                if (image != null)
+//                    ImageIO.write(image, "PNG", selectedFile);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
     }

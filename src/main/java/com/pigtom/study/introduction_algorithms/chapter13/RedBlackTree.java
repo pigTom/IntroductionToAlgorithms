@@ -3,6 +3,8 @@ package com.pigtom.study.introduction_algorithms.chapter13;
 import com.pigtom.study.introduction_algorithms.chapter12.ColorEnum;
 import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
+import com.pigtom.study.introduction_algorithms.utils.ImageSave;
+import com.pigtom.study.introduction_algorithms.utils.MapPanel;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,12 @@ import org.springframework.stereotype.Service;
 public class RedBlackTree {
     Logger log = Logger.getLogger(RedBlackTree.class);
     public static Node<Integer> NIL = new Node<>();
+    private MapPanel mapPanel;
+
+    public void setMapPanel(MapPanel mapPanel) {
+        this.mapPanel = mapPanel;
+    }
+
     static {
         NIL.setColor(ColorEnum.BLACK);
     }
@@ -114,12 +122,6 @@ public class RedBlackTree {
         }
         System.out.println("****" + node.getKey());
         leftRotate(tree, node);
-//        node = search((int) (Math.random() * 20), tree);
-//        while (node == NIL || node.getRight() == NIL) {
-//            node = search((int) (Math.random() * 20), tree);
-//        }
-//        System.out.println("****" + node.getKey());
-//        leftRotate(tree, node);
         inorderVisit(tree);
     }
 
@@ -190,19 +192,19 @@ public class RedBlackTree {
                     y.setColor(ColorEnum.BLACK);
                     z.getParent().setColor(ColorEnum.BLACK);
                     z = grandPa;
-                    print("case 1");
+//                    print("case 1");
                     continue;
                     // 叔叔是黑色的且z是右结点
                 } else if (z.getParent().getRight() == z) {
                     z = z.getParent();
                     leftRotate(tree, z);
-                    print("case 2");
+//                    print("case 2");
                 }
                 // 叔叔是黑色的且z是左结点
                 z.getParent().setColor(ColorEnum.BLACK);
                 z.getParent().getParent().setColor(ColorEnum.RED);
                 rightRotate(tree, z.getParent().getParent());
-                print("case 3");
+//                print("case 3");
             } else {
                 // 父结点是右结点
                 // 叔叔结点是红色的
@@ -212,25 +214,25 @@ public class RedBlackTree {
                     y.setColor(ColorEnum.BLACK);
                     z.getParent().setColor(ColorEnum.BLACK);
                     z = grandPa;
-                    print("case 4");
+//                    print("case 4");
                     continue;
                 } else if (z.getParent().getLeft() == z) {
                     z = z.getParent();
                     rightRotate(tree, z);
-                    print("case 5");
+//                    print("case 5");
                 }
                 // z是右结点
                 z.getParent().setColor(ColorEnum.BLACK);
                 z.getParent().getParent().setColor(ColorEnum.RED);
                 leftRotate(tree,z.getParent().getParent() );
-                print("case 6");
+//                print("case 6");
             }
         }
         // 有几种情况(z是红色的)
         // 1. z.getParent.color == black
         // 2. z.getParent == NIL // z.is root
         tree.getRoot().setColor(ColorEnum.BLACK);
-        print("-----insert end-----");
+//        print("-----insert end-----");
     }
 
     public Tree<Integer> buildTree(int i) {
@@ -238,8 +240,8 @@ public class RedBlackTree {
         tree.setRoot(NIL);
         for (int j = 0; j < i; j++) {
             Node<Integer> node = new Node<>();
-            int num = (int) (Math.random() * i + 1);
-            System.out.println("insert--> " + num);
+            int num = (int) (Math.random() *i + 1);
+//            System.out.println("insert--> " + num);
             node.setKey(num);
             node.setParent(NIL);
             node.setRight(NIL);
@@ -273,6 +275,7 @@ public class RedBlackTree {
         if (z == NIL) {
             return;
         }
+        print("delete--> " + z.getKey());
         delete++;
         // 三种情况
         Node<Integer> x;
@@ -312,12 +315,14 @@ public class RedBlackTree {
             y.setColor(z.getColor());
         }
         if (yOriginColor.equals(ColorEnum.BLACK)) {
+            print("x -- " + x.getKey());
             deleteColorFix(tree, x);
         }
+        print("----delete over----");
     }
 
     Node<Integer> findMinimun(Node<Integer> node) {
-        Node p = node;
+        Node<Integer> p = NIL;
         while (node != NIL) {
             p = node;
             node = node.getLeft();
@@ -328,9 +333,9 @@ public class RedBlackTree {
 
     void deleteColorFix(Tree<Integer> tree, Node<Integer> x) {
         while (x != tree.getRoot() && x.getColor().equals(ColorEnum.BLACK)) {
+            print("parent -- " + x.getParent().getKey() + "  Color-- " + x.getParent().getColor());
             if (x.getParent().getLeft() == x) {
                 Node<Integer> brother = x.getParent().getRight();
-
                 // case 1
                 if (brother.getColor().equals(ColorEnum.RED)) {
                     // 兄弟结点的颜色是红色的，那么父结点的颜色一定是黑色的
@@ -340,84 +345,41 @@ public class RedBlackTree {
                     x.getParent().setColor(ColorEnum.RED);
                     leftRotate(tree, brother.getParent());
                     brother = x.getParent().getRight();
-                    // goto case 2
+                    print("Case 1: x是左结点，右兄弟是红色");
                 }
                 // case 2
-                // 1 all black
                 if (brother.getRight().getColor().equals(ColorEnum.BLACK) &&
                         brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
                     brother.setColor(ColorEnum.RED);
                     x = x.getParent();
+                    print("Case 2：x是左结点,右兄弟是黑色，且它的孩子全是黑色的");
                     continue;
                 }
-//                // 2 all red
-//                else if (brother.getLeft().getColor().equals(ColorEnum.RED) &&
-//                        brother.getRight().getColor().equals(ColorEnum.RED)) {
-//                    brother.setColor(x.getParent().getColor());
-//                    x.getParent().setColor(ColorEnum.BLACK);
-//                    brother.getRight().setColor(ColorEnum.BLACK);
-//                    x = x.getParent();
-//                    break;
-//                }
-                // 2 left red and right black
+                // case 3 brother left red and right black
                 else if (brother.getRight().getColor().equals(ColorEnum.BLACK)) {
                     brother.setColor(ColorEnum.RED);
                     brother.getLeft().setColor(ColorEnum.BLACK);
                     rightRotate(tree, brother);
                     brother = x.getParent().getRight();
+                    print("Case 3：x是左结点，右兄弟是黑色且右兄弟的右孩子也是黑色的，右兄弟的左孩子是红色的");
+                    ImageSave.save(mapPanel.saveImage());
                     // goto 4
+                } else {
+                    // case 4 brother right red
+                    brother.setColor(x.getParent().getColor());
+                    x.getParent().setColor(ColorEnum.BLACK);
+                    brother.getRight().setColor(ColorEnum.BLACK);
+                    leftRotate(tree, x.getParent());
+                    x = tree.getRoot();
+                    print("Case 4：x是左结点，右兄弟是红黑色的，右兄弟的右孩子是红色的");
+                    break;
                 }
-                // 4 right red
-                if (brother == NIL) {
-                    Assertions.fail("brother can not be NIL");
-                }
-                brother.setColor(x.getParent().getColor());
-                x.getParent().setColor(ColorEnum.BLACK);
-                brother.getRight().setColor(ColorEnum.BLACK);
-                leftRotate(tree, x.getParent());
-                x = tree.getRoot();
-                break;
             }
 
             // x是右结点，操作与上面相反
             else {
-//                Node<Integer> brother = x.getParent().getLeft();
-//                // case 3
-//                if (brother.getColor().equals(ColorEnum.RED)) {
-//                    // 兄弟结点的颜色是红色的，那么父结点的颜色一定是黑色的
-//                    // 将父结点的颜色变成红色，兄弟结点的颜色变成黑色
-//                    // 右旋
-//                    brother.setColor(ColorEnum.BLACK);
-//                    x.getParent().setColor(ColorEnum.RED);
-//                    rightRotate(tree, x.getParent());
-//                    brother = x.getParent().getLeft();
-//                    // goto case 4
-//                }
-//                // case 4
-//                // 1 all black
-//                if (brother.getRight().getColor().equals(ColorEnum.BLACK) &&
-//                        brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
-//                    brother.setColor(ColorEnum.RED);
-//                    x = x.getParent();
-//                    continue;
-//                }
-//                // 3 right red and left black
-//                else if (brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
-//                    brother.setColor(ColorEnum.RED);
-//                    brother.getRight().setColor(ColorEnum.BLACK);
-//                    leftRotate(tree, brother);
-//                    brother = x.getParent().getLeft();
-//                    // goto 4
-//                }
-//                // 4 left red
-//                brother.setColor(x.getParent().getColor());
-//                x.getParent().setColor(ColorEnum.BLACK);
-//                brother.getLeft().setColor(ColorEnum.BLACK);
-//                rightRotate(tree, x.getParent());
-//                x = tree.getRoot();
-//                break;
                 Node<Integer> brother = x.getParent().getLeft();
-                // case 1
+                // case 5
                 if (brother.getColor().equals(ColorEnum.RED)) {
                     // 兄弟结点的颜色是红色的，那么父结点的颜色一定是黑色的
                     // 将父结点的颜色变成红色，兄弟结点的颜色变成黑色
@@ -426,34 +388,38 @@ public class RedBlackTree {
                     x.getParent().setColor(ColorEnum.RED);
                     rightRotate(tree, brother.getParent());
                     brother = x.getParent().getLeft();
-                    // goto case 2
+                    print("Case 5: x是右结点，左结点是红色的");
+                    // goto case 6 7 or 8
                 }
-                // case 2
-                // 1 all black
+                // case 6
+                // 1 brother all black
                 if (brother.getLeft().getColor().equals(ColorEnum.BLACK) &&
                         brother.getRight().getColor().equals(ColorEnum.BLACK)) {
                     brother.setColor(ColorEnum.RED);
                     x = x.getParent();
+                    print("Case 6: x是右结点，左结点是黑色的且它的孩子全是黑色的");
                     continue;
                 }
-                // 2 left red and right black
+                // Case 7 left black and right red
                 else if (brother.getLeft().getColor().equals(ColorEnum.BLACK)) {
                     brother.setColor(ColorEnum.RED);
                     brother.getRight().setColor(ColorEnum.BLACK);
                     leftRotate(tree, brother);
                     brother = x.getParent().getLeft();
+                    print("Case 7: x是右结点，左结点是黑色的，左结点的左孩子是黑色的，右孩子是红色的");
+                    ImageSave.save(mapPanel.saveImage());
                     // goto 4
                 }
-                // 4 right red
-                if (brother == NIL) {
-                    Assertions.fail("brother can not be NIL");
+                // Case 8 left red
+                else {
+                    brother.setColor(x.getParent().getColor());
+                    x.getParent().setColor(ColorEnum.BLACK);
+                    brother.getLeft().setColor(ColorEnum.BLACK);
+                    rightRotate(tree, x.getParent());
+                    x = tree.getRoot();
+                    print("Case 8: x是右结点，左结点是黑色的，左结点的左孩子是红色的");
+                    break;
                 }
-                brother.setColor(x.getParent().getColor());
-                x.getParent().setColor(ColorEnum.BLACK);
-                brother.getLeft().setColor(ColorEnum.BLACK);
-                rightRotate(tree, x.getParent());
-                x = tree.getRoot();
-                break;
             }
         }
         x.setColor(ColorEnum.BLACK);
@@ -534,6 +500,7 @@ public class RedBlackTree {
             return i;
         }
     }
+
 
     @Test
     public void testDelete() {

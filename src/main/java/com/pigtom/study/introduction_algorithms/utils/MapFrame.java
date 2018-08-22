@@ -19,8 +19,7 @@ public class MapFrame extends JFrame{
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Dimension2D d = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((int) (d.getWidth() - MapTranslator.screenWidth) / 2,
-                (int) (d.getHeight() - MapTranslator.screenHeight) / 2);
-        this.setSize(MapTranslator.screenWidth, MapTranslator.screenHeight);
+        setLocation(0, 0);
+        this.setSize(1200, 1000);
     }
 }

@@ -5,7 +5,6 @@ import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
 import com.pigtom.study.introduction_algorithms.chapter13.RedBlackTree;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -18,8 +17,8 @@ public class MapPanel  extends BasePanel implements Runnable {
     private RedBlackTree treeTool = new RedBlackTree();
     private Graphics2D g;
     public MapPanel() {
-        tree = new Tree<>();
-        tree.setRoot(RedBlackTree.NIL);
+        tree = treeTool.buildTree(30);
+        treeTool.setMapPanel(this);
     }
     int radius = 15;
     int height = 50;
@@ -42,11 +41,22 @@ public class MapPanel  extends BasePanel implements Runnable {
     @Override
     public void run() {
         while (true) {
-            insertNode();
             ImageSave.save(saveImage());
+
+            int key = (int) (Math.random() * 30)+1;
+            if (tree.getRoot() == RedBlackTree.NIL) {
+                System.out.println("*_*_*_____delete success_____*_*_*");
+                break;
+            }
+            Node<Integer> node = treeTool.search(key, tree);
+            while (node == RedBlackTree.NIL) {
+                key = (int) (Math.random() * 30)+1;
+                node = treeTool.search(key, tree);
+            }
+            treeTool.delete(tree, node);
             this.repaint();
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -87,6 +97,14 @@ public class MapPanel  extends BasePanel implements Runnable {
      */
     private void handlePosition(Node<Integer> node) {
 
+        g.setColor(Color.blue);
+        String a = "";
+        a = node.getKey() == null ? a : node.getKey().toString();
+        g.drawString(a, node.x - radius, node.y-5);
+        if (node.getColor() == ColorEnum.BLACK) {
+            blackNode(g, node.x, node.y);
+        } else redNode(g, node.x, node.y);
+
 
         if (node != RedBlackTree.NIL) {
             Node<Integer> pa = node.getParent();
@@ -94,11 +112,6 @@ public class MapPanel  extends BasePanel implements Runnable {
                 g.setColor(Color.black);
                 g.drawLine(pa.x, pa.y+2*radius, node.x, node.y);
             }
-            g.setColor(Color.blue);
-            g.drawString(node.getKey().toString(), node.x - radius, node.y-5);
-            if (node.getColor() == ColorEnum.BLACK) {
-                blackNode(g, node.x, node.y);
-            } else redNode(g, node.x, node.y);
 
 
             int width = node.width / 2;

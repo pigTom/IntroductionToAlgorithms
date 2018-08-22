@@ -16,12 +16,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="introduction-algorithms" />
         <module name="introductionToAlgorithms" />
         <module name="IntroductionToAlgorithms" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="IntroductionToAlgorithms" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

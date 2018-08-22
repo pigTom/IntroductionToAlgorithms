@@ -1,8 +1,5 @@
 package com.pigtom.study.introduction_algorithms.utils;
 
-import com.pigtom.study.introduction_algorithms.chapter12.Tree;
-import com.pigtom.study.introduction_algorithms.chapter13.RedBlackTree;
-
 import javax.swing.*;
 
 /**
