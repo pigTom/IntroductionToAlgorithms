@@ -34,7 +34,7 @@ public class RedBlackTree {
         // y can not be NIL
         x.setRight(node.getLeft());
         Assertions.assertNotEquals(node, NIL, "wrong");
-        if (node != NIL) {
+        if (node.getLeft() != NIL) {
             node.getLeft().setParent(x);
         }
         replace(tree, x, node);
@@ -46,7 +46,7 @@ public class RedBlackTree {
         Node<Integer> nodeX = x.getLeft();
         x.setLeft(nodeX.getRight());
         Assertions.assertNotEquals(nodeX, NIL, "wrong");
-        if (nodeX != NIL) {
+        if (nodeX.getRight() != NIL) {
             nodeX.getRight().setParent(x);
         }
         replace(tree, x, nodeX);
@@ -267,7 +267,9 @@ public class RedBlackTree {
             // u is the left node
             u.getParent().setLeft(v);
         } else u.getParent().setRight(v);
-        v.setParent(u.getParent());
+
+        if (v != NIL)
+            v.setParent(u.getParent());
     }
     int delete = 0;
     public void delete(Tree<Integer> tree, Node<Integer> z) {
@@ -285,10 +287,12 @@ public class RedBlackTree {
             // 如果左结点为空,用右结点代替z,因为z没有左结点所以，不用处理z的左结点
             x = z.getRight();
             replace(tree, z, x);
+            x.setParent(z.getParent());
         } else if (z.getRight() == NIL) {
             // 如果右结点为空，用左结点代替z，因为z没有右结点，所以，不用处理z的右结点
             x = z.getLeft();
             replace(tree, z, x);
+            x.setParent(z.getParent());
         } else {
             // 如果z的左右结点都不为空，则存在两种情况：
             // 1. z的后继为z的右节点，或者z的后继不是z的右节点。
@@ -301,6 +305,7 @@ public class RedBlackTree {
                 // 如果y不是z的右结点，则还需要用y的右结点来代替y
                 // y是没有左结点的，所以直接替换
                 replace(tree, y, x);
+                x.setParent(y.getParent());
                 // 将z的右结点赋给y的右结点
                 y.setRight(z.getRight());
                 y.getRight().setParent(y);
