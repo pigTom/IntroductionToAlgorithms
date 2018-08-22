@@ -6,6 +6,7 @@ import com.pigtom.study.introduction_algorithms.chapter12.Tree;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.stereotype.Service;
 
 
 /**
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
  * @Author tangDunhong@163.com
  * @Date Created in 2018/8/6 10:25
  */
+@Service
 public class RedBlackTree {
     Logger log = Logger.getLogger(RedBlackTree.class);
     public static Node<Integer> NIL = new Node<>();
@@ -161,7 +163,9 @@ public class RedBlackTree {
         }
         colorFix(tree, node);
     }
-
+    public static void print(Object o){
+        System.out.println(o.toString());
+    }
     /**
      * 当前结点是红色
      * 1，如果当前结点的父结点是红色，并且如果当前结点的叔叔结点也是红色，
@@ -179,23 +183,26 @@ public class RedBlackTree {
 
             // 父结点是左结点
             if (grandPa.getLeft() == z.getParent()) {
-                Node y = z.getParent().getRight();
+                Node y = grandPa.getRight();
                 // 叔叔是红色的
                 if (y.getColor().equals(ColorEnum.RED)) {
                     grandPa.setColor(ColorEnum.RED);
                     y.setColor(ColorEnum.BLACK);
                     z.getParent().setColor(ColorEnum.BLACK);
                     z = grandPa;
+                    print("case 1");
                     continue;
                     // 叔叔是黑色的且z是右结点
                 } else if (z.getParent().getRight() == z) {
                     z = z.getParent();
                     leftRotate(tree, z);
+                    print("case 2");
                 }
                 // 叔叔是黑色的且z是左结点
                 z.getParent().setColor(ColorEnum.BLACK);
                 z.getParent().getParent().setColor(ColorEnum.RED);
                 rightRotate(tree, z.getParent().getParent());
+                print("case 3");
             } else {
                 // 父结点是右结点
                 // 叔叔结点是红色的
@@ -205,21 +212,25 @@ public class RedBlackTree {
                     y.setColor(ColorEnum.BLACK);
                     z.getParent().setColor(ColorEnum.BLACK);
                     z = grandPa;
+                    print("case 4");
                     continue;
                 } else if (z.getParent().getLeft() == z) {
                     z = z.getParent();
                     rightRotate(tree, z);
+                    print("case 5");
                 }
                 // z是右结点
                 z.getParent().setColor(ColorEnum.BLACK);
                 z.getParent().getParent().setColor(ColorEnum.RED);
                 leftRotate(tree,z.getParent().getParent() );
+                print("case 6");
             }
         }
         // 有几种情况(z是红色的)
         // 1. z.getParent.color == black
         // 2. z.getParent == NIL // z.is root
         tree.getRoot().setColor(ColorEnum.BLACK);
+        print("-----insert end-----");
     }
 
     public Tree<Integer> buildTree(int i) {
@@ -234,7 +245,7 @@ public class RedBlackTree {
             node.setRight(NIL);
             node.setLeft(NIL);
             insert(tree, node);
-            testRBTree(tree);
+            isInvalid(tree);
         }
         return tree;
     }
@@ -453,14 +464,14 @@ public class RedBlackTree {
         int num = 10;
         Tree<Integer> tree = buildTree(num);
         inorderVisit(tree);
-        testRBTree(tree);
+        isInvalid(tree);
     }
 
     private String message5 = "不满足性质5：对每个结点，从该结点到其所有后代的简单路径上，均包含相同数目的黑色结点。";
     private String message4 = "不满足性质4:如果一个结点是红色的，那么它的每个孩子结点都是黑色的";
 
     private String message1 = "不满足性质2：根结点必须是黑色。";
-    boolean testRBTree(Tree<Integer> tree) {
+    public boolean isInvalid(Tree<Integer> tree) {
         if (tree.getRoot().getColor() != ColorEnum.BLACK) {
             log.info(message1 + "[node.key " + tree.getRoot().getKey() + "]");
             return false;
@@ -482,7 +493,7 @@ public class RedBlackTree {
         }
         return true;
     }
-    public boolean testRBTreeColor(Node<Integer> node) {
+    public boolean isInvalidColor(Node<Integer> node) {
         boolean flag = true;
         if (node.getColor() == ColorEnum.RED) {
             flag = node.getRight().getColor() == ColorEnum.BLACK
@@ -515,7 +526,8 @@ public class RedBlackTree {
             if (node.getColor() == ColorEnum.BLACK) {
                 return i + 1;
             }
-            boolean flag = testRBTreeColor(node);
+            // 如果是黑色结点,判断一下颜色
+            boolean flag = isInvalidColor(node);
             if (!flag) {
                 return -1;
             }
