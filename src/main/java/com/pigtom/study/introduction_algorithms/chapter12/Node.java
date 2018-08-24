@@ -180,4 +180,19 @@ public class Node<T> {
             v.setParent(u.getParent());
         }
     }
+
+    public static void inorderVisitNoRecurse(Tree<Integer> tree) {
+        SearchTree12_1.inorderVisitNoRecurse(tree);
+    }
+
+    public static void inorderVisitRecurse(Tree<Integer> tree) {
+        SearchTree12_1.inorderVisitRecurse(tree.getRoot());
+    }
+    public static void preorderVisit(Tree<Integer> tree) {
+        SearchTree12_1.preorderVisitRecurse(tree.getRoot());
+    }
+
+    public static Node<Integer> search(Tree<Integer> tree, int key) {
+        return SearchTree12_3.search(key, tree);
+    }
 }

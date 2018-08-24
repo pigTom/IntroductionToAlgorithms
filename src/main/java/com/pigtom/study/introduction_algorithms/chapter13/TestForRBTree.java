@@ -2,6 +2,7 @@ package com.pigtom.study.introduction_algorithms.chapter13;
 
 import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
+import org.junit.jupiter.api.Test;
 
 public class TestForRBTree {
     /**
@@ -19,14 +20,16 @@ public class TestForRBTree {
     Tree<Integer> persistentTreeInsert(Tree<Integer> tree, int key) {
         Tree<Integer> newTree = new Tree<>();
         Node<Integer> node = tree.getRoot();
-        Node<Integer> root = null;
+        Node<Integer> pa = new Node<>();
+        newTree.setRoot(pa);
         if (node == null) {
-            root.setKey(key);
-            newTree.setRoot(root);
+            pa.setKey(key);
             return newTree;
         }
-        root.setKey(node.getKey());
-
+        // copy the root node to new root
+        pa.setKey(node.getKey());
+        pa.setRight(node.getRight());
+        pa.setLeft(node.getLeft());
         if (key < node.getKey()) {
             node = node.getLeft();
         } else {
@@ -38,7 +41,11 @@ public class TestForRBTree {
             newNode.setKey(node.getKey());
             newNode.setLeft(node.getLeft());
             newNode.setRight(node.getRight());
-            root = newNode;
+            // connect new node and the pa of new node
+            if (pa.getLeft() == node) {
+                pa.setLeft(newNode);
+            } else pa.setRight(newNode);
+            pa = newNode;
             if (key < node.getKey()) {
                 node = node.getLeft();
             } else node = node.getRight();
@@ -47,11 +54,27 @@ public class TestForRBTree {
         Node<Integer> addNode = new Node<>();
         addNode.setKey(key);
         // node == null
-        if (key < root.getKey()) {
-            root.setLeft(addNode);
-        } else root.setRight(addNode);
-
+        if (key < pa.getKey()) {
+            pa.setLeft(addNode);
+        } else pa.setRight(addNode);
         return newTree;
+    }
+
+    @Test
+    void testPersistentTreeInsert() {
+        Tree<Integer> tree = Node.buildSearchTree(10);
+        Node.inorderVisitRecurse(tree);
+        int key = (int)(Math.random() * 10);
+        System.out.println("-- new key --" + key);
+        Tree<Integer> newTree = persistentTreeInsert(tree, key);
+        System.out.println("----old tree---");
+        Node.inorderVisitRecurse(tree);
+        System.out.println("----new tree---");
+        Node.inorderVisitRecurse(newTree);
+    }
+
+    void persistentTreeDelete(Tree<Integer> tree, int key) {
+
     }
 }
 
