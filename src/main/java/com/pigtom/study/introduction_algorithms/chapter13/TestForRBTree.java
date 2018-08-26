@@ -62,19 +62,120 @@ public class TestForRBTree {
 
     @Test
     void testPersistentTreeInsert() {
-        Tree<Integer> tree = Node.buildSearchTree(10);
+        int size = 20;
+        Tree<Integer> tree = Node.buildSearchTree(size);
+        System.out.println("-- origin tree --");
         Node.inorderVisitRecurse(tree);
-        int key = (int)(Math.random() * 10);
+        int key = (int)(Math.random() * size);
         System.out.println("-- new key --" + key);
         Tree<Integer> newTree = persistentTreeInsert(tree, key);
-        System.out.println("----old tree---");
+        System.out.println("----origin tree---");
         Node.inorderVisitRecurse(tree);
-        System.out.println("----new tree---");
+        System.out.println("----inserted tree---");
         Node.inorderVisitRecurse(newTree);
+        System.out.println("----delete " + key + "----");
+        Tree<Integer> deleteTree = persistentTreeDelete(tree, key);
+        System.out.println("----origin tree---");
+        Node.inorderVisitRecurse(tree);
+        System.out.println("----deleted tree---");
+        Node.inorderVisitRecurse(deleteTree);
     }
 
-    void persistentTreeDelete(Tree<Integer> tree, int key) {
+    Tree<Integer> persistentTreeDelete(final Tree<Integer> tree, int key) {
+        if (tree.getRoot() == null) {
+            return tree;
+        }
+        Tree<Integer> newTree = new Tree<>();
+        Node<Integer> oldNode = tree.getRoot();
+        Node<Integer> pa = new Node<>();
+        newTree.setRoot(pa);
 
+        pa.setKey(oldNode.getKey());
+        pa.setLeft(oldNode.getLeft());
+        pa.setRight(oldNode.getRight());
+        // step 1: find the node
+        if (key < oldNode.getKey()) {
+            oldNode = oldNode.getLeft();
+        } else if (key > oldNode.getKey()) {
+            oldNode = oldNode.getRight();
+        } else {
+            fixDeletedNode(newTree, pa, null);
+            return newTree;
+        }
+        Node<Integer> temp = pa;
+        while (oldNode != null) {
+            pa = temp;
+            temp = new Node<>();
+            temp.setKey(oldNode.getKey());
+            temp.setLeft(oldNode.getLeft());
+            temp.setRight(oldNode.getRight());
+            // connect new copied node to its parent
+            if (oldNode == pa.getLeft()) {
+                pa.setLeft(temp);
+            } else pa.setRight(temp);
+
+
+            if (key < oldNode.getKey()) {
+                oldNode = oldNode.getLeft();
+            } else if (key > oldNode.getKey()) {
+                oldNode = oldNode.getRight();
+            } else {
+                // find the node to be deleted
+                break;
+            }
+        }
+        if (oldNode != null) {
+            fixDeletedNode(newTree, temp, pa);
+            return newTree;
+        } else {
+            System.out.println("not found");
+            return tree;
+        }
+    }
+
+    public void fixDeletedNode(final Tree<Integer> newTree, final Node<Integer> deletedNode, Node<Integer> pa) {
+        Node<Integer> minimum = null;
+        // test if deleteNode has right node
+        if (deletedNode.getRight() != null) {
+            // find the minimum node in tree of right node of delete node
+            Node<Integer> oldNode = deletedNode.getRight();
+            Node<Integer> newNode = new Node<>();
+            newNode.setKey(oldNode.getKey());
+            newNode.setLeft(oldNode.getLeft());
+            newNode.setRight(oldNode.getRight());
+            deletedNode.setRight(newNode);
+
+            Node<Integer> minimumPa = deletedNode;
+            while (oldNode.getLeft() != null) {
+                minimumPa = newNode;
+                newNode = new Node<>();
+                newNode.setKey(oldNode.getLeft().getKey());
+                newNode.setLeft(oldNode.getLeft().getLeft());
+                newNode.setRight(oldNode.getLeft().getRight());
+                minimumPa.setLeft(newNode);
+                oldNode = oldNode.getLeft();
+            }
+            // node minimum is the minimum node of the right tree
+            // there will be two cases
+            // case 1: the right node of deleteNode is not the minimum node of right tree
+            if (minimumPa != deletedNode) {
+                minimum = minimumPa.getLeft();
+                // minimum node to replace deleted node
+                minimumPa.setLeft(null);
+            } else {
+                minimum = minimumPa.getRight();
+                deletedNode.setRight(minimum.getRight());
+            }
+            minimum.setLeft(deletedNode.getLeft());
+            minimum.setRight(deletedNode.getRight());
+        }
+        // minimum has replaced the deleted node
+        if (pa == null) {
+            newTree.setRoot(minimum);
+        }
+        else if (pa.getLeft() == deletedNode) {
+           pa.setLeft(minimum);
+        } else pa.setRight(minimum);
     }
 }
 
