@@ -33,7 +33,7 @@ public class View {
         MapPanel panel = new MapPanel();
         MapFrame app = new MapFrame(panel);
         app.setVisible(true);
-        new Thread(panel).start();
+//        new Thread(panel).start();
 
 
     }

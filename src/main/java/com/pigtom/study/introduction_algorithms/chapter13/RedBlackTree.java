@@ -12,7 +12,14 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * @Description
+ * @Description 红黑树：
+ *  红黑树是一颗二叉搜索树，它在每个结点上增加了个存储位来表示结点的颜色，可以是RED或BLACK。
+ *  一棵红黑树有以下五条红黑性质：
+ *  1、每个结点或是红色的，或是黑色的
+ *  2、根结点是黑色的。
+ *  3、每个叶结点（NIL）是黑色的
+ *  4、如果一个结点是红色的，那么它的子结点是黑色的。
+ *  5、对每个结点，从该结点到所有后代的简单路径上，均包含相同的黑色结点。
  * @Author tangDunhong@163.com
  * @Date Created in 2018/8/6 10:25
  */
@@ -29,7 +36,17 @@ public class RedBlackTree {
     static {
         NIL.setColor(ColorEnum.BLACK);
     }
-    public void leftRotate(Tree<Integer> tree, Node<Integer> x) {
+
+    /**
+     * 以x为轴（父结点）进行左转
+     * 用x的右结点来取代x，会确定x及其子孙结点联结关系（各个结点的left,right属性值),
+     * 如果有子孙结点为NIL 则不会处理
+     * 注意：该方法不会更新x原父结点，原父结点依然指向x，（须要加已修下）
+     *      也不会更新node父结点属性，实际上node的父结点已经不是x了
+     * @param tree 二叉树
+     * @param x 旋转轴
+     */
+    public static void leftRotate(Tree<Integer> tree, Node<Integer> x) {
         Node<Integer> node = x.getRight();
         // y can not be NIL
         x.setRight(node.getLeft());
@@ -42,7 +59,14 @@ public class RedBlackTree {
         x.setParent(node);
     }
 
-    public void rightRotate(Tree<Integer> tree, Node<Integer> x) {
+    /**
+     * 以x为轴进行右转
+     * 用x的左结点来取代x，会确定x及其子孙结点联结关系（各个结点的left,right属性值),
+     * 如果有子孙结点为NIL 则不会处理
+     * @param tree 二叉树
+     * @param x 旋转轴
+     */
+    public static void rightRotate(Tree<Integer> tree, Node<Integer> x) {
         Node<Integer> nodeX = x.getLeft();
         x.setLeft(nodeX.getRight());
         Assertions.assertNotEquals(nodeX, NIL, "wrong");
@@ -69,7 +93,7 @@ public class RedBlackTree {
         return tree;
     }
 
-    public void insertSearchTree(Tree<Integer> tree, Node<Integer> node) {
+    public static void insertSearchTree(Tree<Integer> tree,final Node<Integer> node) {
         Node<Integer> p = NIL;
         Node<Integer> n = tree.getRoot();
         while (n != NIL) {
@@ -90,7 +114,7 @@ public class RedBlackTree {
         }
     }
 
-    public Node<Integer> search(int key, Tree<Integer> tree) {
+    public static Node<Integer> search(int key, Tree<Integer> tree) {
         // find node
         Node<Integer> node = tree.getRoot();
         while (node != NIL) {
@@ -259,7 +283,7 @@ public class RedBlackTree {
      * @param u    要被替换的结点 (u不能为NIL)
      * @param v    要替换的结点 （v可能是NIL)
      */
-    private void replace(Tree<Integer> tree, Node<Integer> u, Node<Integer> v) {
+    public  static void replace(Tree<Integer> tree, Node<Integer> u, Node<Integer> v) {
         // u is root node
         if (u.getParent() == NIL) {
             tree.setRoot(v);
@@ -530,9 +554,9 @@ public class RedBlackTree {
         }
     }
 
-    int i = 0;
+    static int i = 0;
 
-    public int inorderVisit(Tree<Integer> tree) {
+    public static int inorderVisit(Tree<Integer> tree) {
         i = 0;
         if (tree.getRoot() != NIL) {
             inorderVisitRecurse(tree.getRoot());
@@ -541,7 +565,7 @@ public class RedBlackTree {
         return i;
     }
 
-    private void inorderVisitRecurse(Node<Integer> node) {
+    private static void inorderVisitRecurse(Node<Integer> node) {
         if (node.getLeft() != NIL) {
             inorderVisitRecurse(node.getLeft());
         }

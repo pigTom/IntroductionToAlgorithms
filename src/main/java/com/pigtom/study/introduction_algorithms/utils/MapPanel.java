@@ -3,6 +3,7 @@ package com.pigtom.study.introduction_algorithms.utils;
 import com.pigtom.study.introduction_algorithms.chapter12.ColorEnum;
 import com.pigtom.study.introduction_algorithms.chapter12.Node;
 import com.pigtom.study.introduction_algorithms.chapter12.Tree;
+import com.pigtom.study.introduction_algorithms.chapter13.AVLTree;
 import com.pigtom.study.introduction_algorithms.chapter13.RedBlackTree;
 
 import java.awt.*;
@@ -14,11 +15,10 @@ import java.awt.*;
  */
 public class MapPanel  extends BasePanel implements Runnable {
     private Tree<Integer> tree;
-    private RedBlackTree treeTool = new RedBlackTree();
+    private AVLTree treeTool = new AVLTree();
     private Graphics2D g;
     public MapPanel() {
-        tree = treeTool.buildTree(30);
-        treeTool.setMapPanel(this);
+        tree = treeTool.buildSearchTree(20);
     }
     int radius = 15;
     int height = 50;
@@ -36,33 +36,33 @@ public class MapPanel  extends BasePanel implements Runnable {
         node.setParent(RedBlackTree.NIL);
         node.setLeft(RedBlackTree.NIL);
         node.setRight(RedBlackTree.NIL);
-        treeTool.insert(tree, node);
+        treeTool.avlInsert(tree, node);
     }
     @Override
     public void run() {
         while (true) {
-            ImageSave.save(saveImage());
-
-            int key = (int) (Math.random() * 30)+1;
-            if (tree.getRoot() == RedBlackTree.NIL) {
-                System.out.println("*_*_*_____delete success_____*_*_*");
-                break;
-            }
-            Node<Integer> node = treeTool.search(key, tree);
-            while (node == RedBlackTree.NIL) {
-                key = (int) (Math.random() * 30)+1;
-                node = treeTool.search(key, tree);
-            }
-            treeTool.delete(tree, node);
-            this.repaint();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if(!treeTool.isInvalid(tree))
-                break;
+//            ImageSave.save(saveImage());
+//
+//            int key = (int) (Math.random() * 30)+1;
+//            if (tree.getRoot() == RedBlackTree.NIL) {
+//                System.out.println("*_*_*_____delete success_____*_*_*");
+//                break;
+//            }
+//            Node<Integer> node = RedBlackTree.search(key, tree);
+//            while (node == RedBlackTree.NIL) {
+//                key = (int) (Math.random() * 30)+1;
+//                node = RedBlackTree.search(key, tree);
+//            }
+//            treeTool.delete(tree, node);
+//            this.repaint();
+//            try {
+//                Thread.sleep(1000);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//            if(!treeTool.isInvalid(tree))
+//                break;
         }
     }
 

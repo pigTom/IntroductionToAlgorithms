@@ -6,6 +6,8 @@ public class Node<T> {
     private Node<T> right;
     private ColorEnum color;
     private T key;
+
+    public int h;
     /**
      * position in horizontal
      */
