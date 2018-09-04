@@ -164,7 +164,7 @@ public class RedBlackTree {
     }
 
 
-    public void insert(Tree<Integer> tree, Node<Integer> node) {
+    public static void insert(Tree<Integer> tree, Node<Integer> node) {
         Node<Integer> y = NIL;
         Node<Integer> temp = tree.getRoot();
         while (temp != NIL) {
@@ -189,19 +189,20 @@ public class RedBlackTree {
         }
         colorFix(tree, node);
     }
+
     public static void print(Object o){
         System.out.println(o.toString());
     }
     /**
+     * 插入之后：
      * 当前结点是红色
      * 1，如果当前结点的父结点是红色，并且如果当前结点的叔叔结点也是红色，
      * 则将当前结点的父结点和叔叔颜色都变成黑色。祖父结点的颜色变成红色。
      * 2、如果当前结点的叔叔结点是黑色，
-     *
      * @param tree
      * @param z
      */
-    public void colorFix(Tree<Integer> tree, Node<Integer> z) {
+    public static void colorFix(Tree<Integer> tree, Node<Integer> z) {
         // 父结点是红色的
         while (z.getParent().getColor().equals(ColorEnum.RED)) {
             // 因为父结点是红色的，所以祖父一定不为空

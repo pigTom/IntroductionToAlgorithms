@@ -7,6 +7,11 @@ public class Node<T> {
     private ColorEnum color;
     private T key;
 
+    /**
+     * the size of the tree which root is the node
+     */
+    public int size;
+
     public int h;
     /**
      * position in horizontal
