@@ -11,12 +11,12 @@ public class View {
     public static void main(String args[]) {
 
 
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+//        try {
+//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//
+//        } catch (Exception e) {
+//            System.err.println("Error: " + e.getMessage());
+//        }
 
         UIManager.put("MenuItem.font", Fonts.font1);
         UIManager.put("Menu.font", Fonts.font1);
