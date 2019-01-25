@@ -37,7 +37,11 @@ public class DynamicDesign {
 
     @Test
     public void test() {
-        int[] a = {-1,1,5,8,9,10,17,17,20,24,30};
-        cutRod(a, a.length-1);
+        int[] a = {-1, 1, 5, 8, 9, 10, 17, 17, 20, 24, 30};
+        cutRod(a, a.length - 1);
+    }
+
+    public void addNewMethod () {
+        // add to release1.0 brance
     }
 }
