@@ -42,6 +42,10 @@ public class DynamicDesign {
     }
 
     public void addNewMethod () {
-        // add to release1.0 brance
+        // add to release1.0 branch
+    }
+
+    public void addNewMethod2 () {
+        // add to release1.o branch
     }
 }
